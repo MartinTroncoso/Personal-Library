@@ -1,0 +1,18 @@
+# Crear repositorio
+git init
+
+# Seguir cambios
+git status
+git add archivo.py
+git commit -m "agrego función suma"
+
+# Conectar a GitHub
+git remote add origin https://github.com/usuario/repositorio.git
+git push -u origin main
+
+# Crear branch
+git checkout -b nueva-feature
+
+# Fusionar cambios
+git checkout main
+git merge nueva-feature
