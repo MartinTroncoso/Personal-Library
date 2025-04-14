@@ -16,3 +16,6 @@ git checkout -b nueva-feature
 # Fusionar cambios
 git checkout main
 git merge nueva-feature
+
+# Cambiar nombre de la Branch
+git branch -M <nombre_nuevo>
