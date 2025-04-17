@@ -19,7 +19,7 @@
                         data-bs-toggle="offcanvas"
                         data-bs-target="#profileOffcanvas"
                         aria-controls="profileOffcanvas">
-                {{ request.user.first_name|default:request.user.username|first|upper }}
+                {{ request.user.username|first|upper }}
                 </button>
             </div>
         </div>
@@ -30,7 +30,7 @@
           <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
         </div>
         <div class="offcanvas-body">
-          <p><strong>Usuario:</strong> {{ request.user.get_full_name|default:request.user.username }}</p>
+          <p><strong>Usuario:</strong> {{ request.user.username }}</p>
       
           <form method="post" action="{% url 'logout' %}">
             {% csrf_token %}
