@@ -1,12 +1,14 @@
 from django.db import IntegrityError
 from django.shortcuts import redirect, render
 from django.utils.timezone import now
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 
 from Application.forms import Login, Register 
 
 import Application.models as models
 
+@login_required
 def index(request):
     return render(request, 'index.html', {'timestamp' : now().timestamp()})
 
@@ -22,9 +24,9 @@ def login_view(request):
             
             if user is not None:
                 login(request, user)
-                return redirect('/')
+                return redirect('index')
             else:
-                form_login.add_error(None, 'Invalid username or password')
+                form_login.add_error(None, 'Usuario o contraseña incorrectos')
                 return render(request, "login.html", {"form_login": form_login, 'timestamp' : now().timestamp()})
     else:
         form_login = Login()
@@ -32,6 +34,9 @@ def login_view(request):
     return render(request, "login.html", {"form_login": form_login, 'timestamp' : now().timestamp()})
 
 def register_view(request):
+    if request.user.is_authenticated:
+        return redirect('index')
+    
     if request.method == 'POST':
         form_register = Register(request.POST)
         
@@ -45,7 +50,7 @@ def register_view(request):
                 try:
                     user = models.Usuario.objects.create(username=username, password=password, email=email)
                     user.save()
-                    return redirect('/')
+                    return redirect('index')
                 except IntegrityError:
                     form_register.add_error('username', 'El usuario ingresado ya está registrado')
                     return render(request, "register.html", {"form_register": form_register, 'timestamp' : now().timestamp()})
@@ -58,6 +63,9 @@ def register_view(request):
     return render(request, "register.html", {"form_register": form_register, 'timestamp' : now().timestamp()})
             
         
-def logout(request):
+def logout_view(request):
     logout(request)
-    return redirect('/')
+    return redirect('login')
+
+################ VISTAS ################
+

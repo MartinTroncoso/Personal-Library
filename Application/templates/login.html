@@ -11,7 +11,17 @@
         <form method="POST">
             {% csrf_token %}
 
-            {{ form_login.as_p }}
+            <div class="mb-3">
+                {{ form_login.username.label_tag }}
+                {{ form_login.username }}
+                {{ form_login.username.errors }}
+            </div>
+            
+            <div class="mb-3">
+                {{ form_login.password.label_tag }}
+                {{ form_login.password }}
+                {{ form_login.password.errors }}
+            </div>
 
             <button type="submit" class="btn btn-primary w-100">Ingresar</button>
 
@@ -27,7 +37,7 @@
             <hr>
             <div class="text-center">
                 <p>¿No tienes cuenta?</p>
-                <a href="/register" class="btn btn-success w-100">Crear cuenta</a>
+                <a href="{% url 'register' %}" class="btn btn-success w-100">Crear cuenta</a>
             </div>
         </form>
     </div>
