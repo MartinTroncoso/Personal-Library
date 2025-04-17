@@ -1,0 +1,70 @@
+{% extends 'layouts/base.html' %}
+{% block content %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}?v={{ timestamp }}">
+</head>
+<body>
+    <header class="text-center">
+        <div class="container">
+          <h1 class="display-4">Personal Library App</h1>
+          <p class="lead">Busque y encuentre una gran variedad de libros</p>
+        </div>
+    </header>
+      <!-- Sección principal -->
+      <section class="hero">
+        <div class="container">
+          <h2 class="mb-4">¿Qué encontrarás aquí?</h2>
+          <p class="mb-5">Este es un ejemplo de página web responsive y estilizada. Usamos Bootstrap para que se vea bien en todos los dispositivos.</p>
+    
+          <div class="row g-4">
+            <div class="col-md-4">
+              <div class="card shadow-sm">
+                <img src="https://picsum.photos/400/200?random=1" class="card-img-top" alt="Imagen 1">
+                <div class="card-body">
+                  <h5 class="card-title">Sección 1</h5>
+                  <p class="card-text">Un poco de información interesante sobre esta sección.</p>
+                  <a href="#" class="btn btn-primary">Ver más</a>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card shadow-sm">
+                <img src="https://picsum.photos/400/200?random=2" class="card-img-top" alt="Imagen 2">
+                <div class="card-body">
+                  <h5 class="card-title">Sección 2</h5>
+                  <p class="card-text">Otra parte genial que podrías explorar.</p>
+                  <a href="#" class="btn btn-primary">Descubrir</a>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card shadow-sm">
+                <img src="https://picsum.photos/400/200?random=3" class="card-img-top" alt="Imagen 3">
+                <div class="card-body">
+                  <h5 class="card-title">Sección 3</h5>
+                  <p class="card-text">Contenido útil o destacado para tus visitantes.</p>
+                  <a href="#" class="btn btn-primary">Más info</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    
+      <!-- Footer -->
+      <footer class="bg-dark text-white text-center py-4 mt-5">
+        <div class="container">
+          <p class="mb-0">&copy; 2025 Mi Sitio. Todos los derechos reservados.</p>
+        </div>
+      </footer>
+    
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>    
+</body>
+</html>
+{% endblock %}
