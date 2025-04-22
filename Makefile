@@ -1,4 +1,7 @@
 # Makefile para GitBash
+up:
+	docker-compose up
+
 makemigrations:
 	docker-compose exec web python manage.py makemigrations
 

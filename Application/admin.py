@@ -1,3 +1,6 @@
 from django.contrib import admin
 
-# Register your models here.
+import Application.models as models
+
+admin.site.register(models.Libro)
+admin.site.register(models.Usuario)

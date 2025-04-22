@@ -1,0 +1,76 @@
+{% extends "layouts/base.html" %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Agregar libro</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <div class="container mt-5">
+        <h2 class="mb-4">Buscar libros desde Google Books</h2>
+      
+        <div class="input-group mb-3">
+          <input type="text" id="searchInput" class="form-control" placeholder="Buscar libro por título...">
+          <button class="btn btn-primary" onclick="buscarLibros()">Buscar</button>
+        </div>
+      
+        <div id="resultados" class="row gy-4"></div>
+      </div>
+      
+      <script>
+        function buscarLibros() {
+          const query = document.getElementById('searchInput').value;
+          const url = `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&langRestrict=es&maxResults=10`;
+      
+          fetch(url)
+            .then(res => res.json())
+            .then(data => mostrarLibros(data.items))
+            .catch(err => console.error(err));
+        }
+      
+        function mostrarLibros(libros) {
+          const container = document.getElementById('resultados');
+          container.innerHTML = ''; // Limpiar resultados anteriores
+      
+          if (!libros || libros.length === 0) {
+            container.innerHTML = '<p>No se encontraron libros.</p>';
+            return;
+          }
+      
+          libros.forEach(libro => {
+            const info = libro.volumeInfo;
+            const title = info.title || "Título desconocido";
+            const authors = info.authors ? info.authors.join(', ') : "Autor desconocido";
+            const img = info.imageLinks?.thumbnail || 'https://via.placeholder.com/128x180?text=Sin+Portada';
+      
+            const card = document.createElement('div');
+            card.className = 'col-md-4';
+      
+            card.innerHTML = `
+              <div class="card h-100">
+                <img src="${img}" class="card-img-top" alt="Portada">
+                <div class="card-body d-flex flex-column">
+                  <h5 class="card-title">${title}</h5>
+                  <p class="card-text text-muted">${authors}</p>
+                  <button class="btn btn-success mt-auto" onclick='agregarLibro(${JSON.stringify(libro)})'>Agregar</button>
+                </div>
+              </div>
+            `;
+      
+            container.appendChild(card);
+          });
+        }
+      
+        function agregarLibro(libro) {
+          const info = libro.volumeInfo;
+          alert(`Libro agregado: ${info.title} de ${info.authors?.join(', ')}`);
+          // Aquí podrías enviar el libro al backend con fetch POST o guardarlo localmente
+        }
+      </script>
+  </div>
+</body>
+</html>
+{% endblock %}
