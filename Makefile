@@ -20,3 +20,6 @@ shell:
 
 show_urls:
 	docker-compose exec web python manage.py show_urls
+
+inspect_db:
+	winpty docker exec -it git-db-1 psql -U postgres -d postgres

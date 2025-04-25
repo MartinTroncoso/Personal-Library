@@ -1,9 +1,8 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
 
-class Usuario(models.Model):
-    username = models.CharField(max_length=50)
-    password = models.CharField(max_length=50)
-    email = models.EmailField(max_length=50)
+class Usuario(AbstractUser):
+    telefono = models.CharField(max_length=15, null=True, blank=True)
     
     class Meta:
         db_table = 'Usuario'
@@ -16,10 +15,11 @@ class Usuario(models.Model):
 class Libro(models.Model):
     usuario = models.ManyToManyField(Usuario, related_name='libros')
     leido = models.BooleanField(default=False)
-    titulo = models.CharField(max_length=50)
-    descripción = models.TextField()
-    autor = models.CharField(max_length=50)
+    titulo = models.CharField(max_length=100)
+    descripcion = models.TextField()
+    autores = models.CharField(max_length=50)
     fecha = models.DateField(null=True, blank=True)
+    portada = models.URLField(max_length=200, null=True, blank=True)
     
     class Meta:
         db_table = 'Libro'

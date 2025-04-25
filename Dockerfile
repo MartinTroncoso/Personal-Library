@@ -18,4 +18,3 @@ EXPOSE 8000
 
 # Comando por defecto al iniciar el contenedor
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
-RUN pip show psycopg2-binary

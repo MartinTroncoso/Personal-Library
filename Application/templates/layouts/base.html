@@ -8,7 +8,7 @@
     <title>Personal Library App</title>
 </head>
 <body>
-    <nav class="navbar navbar-light bg-light fixed-top position-relative">
+    <nav class="navbar fixed-top position-relative shadow-sm bg-white">
         <div class="container-fluid position-relative">
             <a class="navbar-brand">Personal Library App</a>
             <a href="/" type="button" class="btn btn-info top-50 start-50 translate-middle position-absolute">Página principal</a>
@@ -26,21 +26,22 @@
     </nav>
     <div class="offcanvas offcanvas-end" tabindex="-1" id="profileOffcanvas" aria-labelledby="profileOffcanvasLabel">
         <div class="offcanvas-header">
-          <h5 class="offcanvas-title" id="profileOffcanvasLabel">Perfil</h5>
-          <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
+            <h5 class="offcanvas-title" id="profileOffcanvasLabel">Perfil</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
         </div>
         <div class="offcanvas-body">
           <p><strong>Usuario:</strong> {{ request.user.username }}</p>
       
           <form method="post" action="{% url 'logout' %}">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-danger w-100">Cerrar sesión</button>
+              {% csrf_token %}
+              <button type="submit" class="btn btn-danger w-100">Cerrar sesión</button>
           </form>
         </div>
     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-XHnCwQzZWB2AKZXUg2KZIbQnYIjQgLeqG8nCmDfnKOwI9oYc6ZEkLjcW+UvF0Ujo" crossorigin="anonymous"></script>
+
+    {% block content %}
+    {% endblock %}
 </body>
 </html>
-
-{% block content %}
-{% endblock %}
