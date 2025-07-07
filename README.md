@@ -7,5 +7,5 @@ This application allows the user to search for any book available in the Google 
 * NO_PAGES > No pages available to read, neither free nor paying.
 
 ## Run the application
-This project uses Docker to successfully install all the dependencies and required packages. You will find some configuration files in the repository (docker-compose.yml, Dockerfile, requirements.txt).
+This project uses Docker to successfully install all the dependencies and required packages. You will find the mandatory configuration files in the repository (docker-compose.yml, Dockerfile, requirements.txt). Makefile contains an abbreviation of some useful commands to test and configure the application. Following statement stands for 'docker-compose up', which starts the program:
 * make up
