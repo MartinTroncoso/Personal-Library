@@ -6,54 +6,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}?v={{ timestamp }}">
 </head>
 <body>
-    <header class="text-center">
-        <div class="container">
-          <h1 class="display-4">Personal Library App</h1>
-          <p class="lead">Busque y encuentre una gran variedad de libros</p>
-        </div>
-    </header>
-      <!-- Sección principal -->
-      <section class="hero">
-        <div class="container">
-          <h2 class="mb-4">¿Qué encontrarás aquí?</h2>
-          <p class="mb-5">Este es un ejemplo de página web responsive y estilizada. Usamos Bootstrap para que se vea bien en todos los dispositivos.</p>
-    
-          <div class="row g-4">
-            <div class="col-md-4">
-              <div class="card shadow-sm">
-                <img src="https://picsum.photos/400/200?random=1" class="card-img-top" alt="Imagen 1">
-                <div class="card-body">
-                  <h5 class="card-title">Mi biblioteca</h5>
-                  <p class="card-text">Entrá y mirá los libros que guardaste!</p>
-                  <a href="{% url 'biblioteca' %}" class="btn btn-primary">Ver más</a>
-                </div>
-              </div>
+    <!-- SECCIÓN PRINCIPAL -->
+    <section class="py-5" style="background-color: #f8f9fa;">
+      <div class="container">
+        <h2 class="text-center fw-bold mb-4">Bienvenido a tu espacio lector</h2>
+        <p class="text-center text-muted mb-5">Mantené organizada tu lectura, descubrí libros nuevos y seguí tu progreso.</p>
+
+        <div class="row g-4">
+          <!-- Tarjeta: Biblioteca -->
+          <div class="col-md-4">
+            <div class="card border-0 rounded-4 shadow-sm text-center p-4 h-100">
+              <div class="display-4 text-primary mb-3">📚</div>
+              <h5 class="fw-bold">Mi Biblioteca</h5>
+              <p>Consultá todos los libros que agregaste.</p>
+              <a href="{% url 'biblioteca' %}" class="btn btn-primary mt-auto">Ver biblioteca</a>
             </div>
-            <div class="col-md-4">
-              <div class="card shadow-sm">
-                <img src="https://picsum.photos/400/200?random=3" class="card-img-top" alt="Imagen 3">
-                <div class="card-body">
-                  <h5 class="card-title">Sección 3</h5>
-                  <p class="card-text">Contenido útil o destacado para tus visitantes.</p>
-                  <a href="#" class="btn btn-primary">Más info</a>
-                </div>
-              </div>
+          </div>
+
+          <!-- Tarjeta: Libro del día -->
+          <div class="col-md-4">
+            <div class="card border-0 rounded-4 shadow-sm text-center p-4 h-100">
+              <div class="display-4 text-warning mb-3">🌟</div>
+              <h5 class="fw-bold">Recomendado del día</h5>
+              <p><strong>{{ libro_del_dia.titulo }}</strong></p>
+              <a href="{% url 'libro_del_dia' %}" class="btn btn-warning mt-auto text-white">Ver libro</a>
+            </div>
+          </div>
+
+          <!-- Tarjeta: Estadísticas -->
+          <div class="col-md-4">
+            <div class="card border-0 rounded-4 shadow-sm text-center p-4 h-100">
+              <div class="display-4 text-success mb-3">📊</div>
+              <h5 class="fw-bold">Estadísticas</h5>
+              <ul class="list-unstyled text-muted">
+                <li>
+                  {% if fecha_ultimo_libro_agregado %}
+                    <p>📅 Último: {{ datos_fecha.day }}/{{ datos_fecha.month }}/{{ datos_fecha.year }}</p>
+                  {% else %}
+                    <p>No hay libros aún.</p>
+                  {% endif %}
+                </li>
+                <li>🔢 Total: {{ cantidad_libros_guardados }}</li>
+                <li>📖 Último título: {{ ultimo_libro_agregado.titulo }}</li>
+              </ul>
             </div>
           </div>
         </div>
-      </section>
-    
-      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>    
+      </div>
+    </section>
 
-      <footer class="bg-dark text-white text-center py-4 mt-5">
-        <div class="container">
-          <p class="mb-0">&copy; 2025 Mi Sitio. Todos los derechos reservados.</p>
-        </div>
-      </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>    
 </body>
 </html>
 {% endblock %}

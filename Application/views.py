@@ -8,9 +8,14 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.http import JsonResponse
 from dateutil import parser # type: ignore
+from datetime import datetime
 
 import Application.forms as forms
 import Application.models as models
+
+fecha_ultimo_libro_agregado = None
+meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+         "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]
 
 def login_view(request):
     if request.user.is_authenticated:
@@ -73,7 +78,21 @@ def logout_view(request):
 
 @login_required
 def index(request):
-    return render(request, 'index.html', {'timestamp' : now().timestamp()})
+    libro_del_dia = models.LibroDelDia.objects.last()
+    
+    if fecha_ultimo_libro_agregado:
+        datos_fecha = {
+            'year': fecha_ultimo_libro_agregado.year,
+            'month': meses[fecha_ultimo_libro_agregado.month - 1],
+            'day': fecha_ultimo_libro_agregado.day,
+            'hour': fecha_ultimo_libro_agregado.strftime('%H:%M:%S')
+        }
+    else:
+        datos_fecha = {}
+    
+    return render(request, 'index.html', {"libro_del_dia": libro_del_dia, "cantidad_libros_guardados": cantidad_libros_guardados(request.user.id),
+                                          "fecha_ultimo_libro_agregado": fecha_ultimo_libro_agregado, "datos_fecha" : datos_fecha, 'timestamp' : now().timestamp(),
+                                          "ultimo_libro_agregado": models.Libro.objects.last()})
 
 @login_required
 def biblioteca_view(request):
@@ -82,31 +101,28 @@ def biblioteca_view(request):
 
 @login_required
 def add_libro_view(request):
-    import logging
-    logger = logging.getLogger(__name__)
-    
     if request.method == 'POST':
         try:
             datos = json.loads(request.body)
             
             fecha_parseada = parser.parse(datos['fecha_publicacion'])
             
-            nuevo_libro = models.Libro(titulo=datos['titulo'], descripcion=datos['descripcion'], autores=datos['autores'], fecha=fecha_parseada, portada=datos['portada'])
+            nuevo_libro = models.Libro(titulo=datos['titulo'], subtitulo=datos['subtitulo'], descripcion=datos['descripcion'], autores=datos['autores'], fecha=fecha_parseada, portada=datos['portada'], 
+                                        visibilidad=datos['visibilidad'], link_lectura=datos['link_lectura'])
 
-            if not models.Libro.objects.filter(titulo = nuevo_libro.titulo, autores = nuevo_libro.autores).exists():
+            if not models.Libro.objects.filter(titulo = nuevo_libro.titulo, subtitulo = nuevo_libro.subtitulo, autores = nuevo_libro.autores).exists():
                 nuevo_libro.save()
                 nuevo_libro.usuario.set([request.user.id])
-                logger.info(f"NUEVO LIBRO PAPITO {nuevo_libro} de {nuevo_libro.autores}")
+                global fecha_ultimo_libro_agregado
+                fecha_ultimo_libro_agregado = datetime.now()
                 return JsonResponse({'status': 'success', 'accion' : 'nuevo'})
-            elif request.user.id not in models.Libro.objects.get(titulo = nuevo_libro.titulo, autores = nuevo_libro.autores).usuario.values_list('id', flat=True):
+            elif request.user.id not in models.Libro.objects.get(titulo = nuevo_libro.titulo, subtitulo = nuevo_libro.subtitulo, autores = nuevo_libro.autores).usuario.values_list('id', flat=True):
                 models.Libro.objects.get(titulo = nuevo_libro.titulo, autores = nuevo_libro.autores).usuario.add(request.user.id)
-                logger.info(f"EL LIBRO YA EXISTÍA Y TIENE UN NUEVO USUARIO {request.user.username}")
+                fecha_ultimo_libro_agregado = datetime.now()
                 return JsonResponse({'status': 'success', 'accion' : 'existente_nuevo_usuario'})
             else:
-                logger.info(f"EL USUARIO {request.user.username} YA TIENE ESTE LIBRO")
                 return JsonResponse({'status': 'success', 'accion' : 'repetido'})
         except Exception as e:
-            logger.exception("Error al guardar libro")
             return JsonResponse({'status': 'error', 'message': str(e)})
     
     return render(request, "add_libro.html", {'timestamp' : now().timestamp()})
@@ -114,31 +130,50 @@ def add_libro_view(request):
 @login_required
 def libro_view(request, id):
     libro = get_object_or_404(models.Libro, id=id)
+    
+    if request.method == 'POST':
+        try:
+            estado = request.POST.get('estado')
+            models.Libro.objects.filter(id=id).update(estado=estado)
+            return redirect('biblioteca')
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)})
+    
     return render(request, "libro.html", {"libro": libro, 'timestamp' : now().timestamp()})
-        
-# @login_required
-# def add_libro_view(request):
-#     if request.method == 'POST':
-#         form_add_libro = forms.Add_Libro(request.POST)
-        
-#         if form_add_libro.is_valid():
-#             titulo = form_add_libro.cleaned_data['titulo']
-#             descripcion = form_add_libro.cleaned_data['descripcion']
-#             autor = form_add_libro.cleaned_data['autor']
-#             fecha = form_add_libro.cleaned_data['fecha']
-#             leido = form_add_libro.cleaned_data['leido']
+
+@login_required
+def libro_del_dia_view(request):
+    libro_del_dia = models.LibroDelDia.objects.last()
+    
+    if request.method == 'POST':
+        try:
+            if not models.Libro.objects.filter(titulo = libro_del_dia.titulo, subtitulo = libro_del_dia.subtitulo, autores = libro_del_dia.autores).exists():
+                models.Libro.objects.create(
+                    titulo = libro_del_dia.titulo,
+                    subtitulo = libro_del_dia.subtitulo,
+                    descripcion = libro_del_dia.descripcion,
+                    autores = libro_del_dia.autores,
+                    fecha = libro_del_dia.fecha,
+                    portada = libro_del_dia.portada,
+                    visibilidad = libro_del_dia.visibilidad,
+                    link_lectura = libro_del_dia.link_lectura
+                ).usuario.set([request.user.id])
             
-#             libro = models.Libro(titulo=titulo, descripcion=descripcion, autor=autor, fecha=fecha, leido=leido, usuario=request.user)
-#             libro.save()
+                global fecha_ultimo_libro_agregado
+                fecha_ultimo_libro_agregado = datetime.now()
             
-#             return redirect('biblioteca')
-#         else:
-#             form_add_libro.add_error(None, 'Error al agregar el libro')
-#             return render(request, "add_libro.html", {"form_add_libro": form_add_libro, 'timestamp' : now().timestamp()})
-#     else:
-#         form_add_libro = forms.Add_Libro()
-        
-#     return render(request, "add_libro.html", {"form_add_libro": form_add_libro, 'timestamp' : now().timestamp()})
+                return JsonResponse({'status': 'success', 'accion': 'nuevo', 'message': 'Libro del día agregado a tu biblioteca'})
+            elif request.user.id not in models.Libro.objects.get(titulo = libro_del_dia.titulo, subtitulo = libro_del_dia.subtitulo, autores = libro_del_dia.autores).usuario.values_list('id', flat=True):
+                models.Libro.objects.get(titulo = libro_del_dia.titulo, autores = libro_del_dia.autores).usuario.add(request.user.id)
+                fecha_ultimo_libro_agregado = datetime.now()
+                return JsonResponse({'status': 'success', 'accion': 'existente_nuevo_usuario', 'message': 'Libro del día agregado a tu biblioteca'})
+            else:
+                return JsonResponse({'status': 'success', 'accion': 'repetido', 'message': 'El libro del día ya está en tu biblioteca'})
+        except Exception as e:
+            messages.error(request, 'Error al agregar el libro del día a tu biblioteca')
+            return redirect('index')
+    
+    return render(request, "libro_del_dia.html", {"libro_del_dia": libro_del_dia, 'timestamp' : now().timestamp()})
 
 @login_required
 @require_POST
@@ -151,3 +186,6 @@ def delete_libro_view(request,id):
     except Exception as e:
         messages.error(request, 'Error al eliminar el libro')
         return redirect('biblioteca')
+    
+def cantidad_libros_guardados(user_id):
+    return models.Libro.objects.filter(usuario = user_id).count()

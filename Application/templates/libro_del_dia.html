@@ -1,0 +1,110 @@
+{% extends "layouts/base.html" %}
+{% block content %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body class="bg-light">
+    <div class="container py-5">
+        <div class="d-flex justify-content-between align-items-center">
+            <h1>{{ libro_del_dia.titulo }}</h1>
+            <a href="{% url 'index' %}" class="btn btn-outline-secondary ms-4">← Volver</a>
+        </div>
+        {% if libro_del_dia.subtitulo  %}
+        <h5 class="mb-4">{{ libro_del_dia.subtitulo }}</h5>
+        {% endif %}
+
+        <div class="card shadow-sm">
+            <div class="row g-0">
+                {% if libro_del_dia.portada %}
+                <div class="col-md-4">
+                    <img src="{{ libro_del_dia.portada }}" class="img-fluid rounded-start img_adjusted" alt="Portada del libro">
+                </div>
+                {% endif %}
+                <div class="col">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ libro_del_dia.autores }}</h5>
+                        <p class="card-text">{{ libro_del_dia.descripcion|default:"Sin descripción." }}</p>
+                        {% if libro_del_dia.fecha %}
+                        <p class="card-text">
+                            <small class="text-muted">Publicado el {{ libro_del_dia.fecha }}</small>
+                        </p>
+                        {% endif %}
+                        <form id="formAgregarLibro">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-primary">Agregar a mi biblioteca</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        document.getElementById('formAgregarLibro').addEventListener('submit', async function(e) {
+            e.preventDefault(); // Evita recargar la página
+
+            const form = e.target;
+            const formData = new FormData(form);
+
+            try {
+                const response = await fetch('', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
+                    },
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    switch (data.accion) {
+                        case 'nuevo':
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Libro agregado 📚',
+                                text: data.message || 'Tu libro fue guardado con éxito.'
+                            });
+                            break;
+                        case 'existente_nuevo_usuario':
+                            Swal.fire({
+                                icon: 'success',
+                                title: '✅ Ya existía el libro, pero ahora está asociado a vos',
+                                text: data.message || 'Tu libro fue guardado con éxito.'
+                            });
+                            break;
+                        case 'repetido':
+                            Swal.fire({
+                                icon: 'info',
+                                title: 'ℹ️ Ya tenés este libro en tu colección',
+                                text: data.message || 'El libro ya estaba guardado en tu biblioteca.'
+                            });
+                            break;
+                    }
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: '❌ Error al agregar el libro',
+                        text: data.message || 'Ocurrió un problema.'
+                    });
+                }
+            } catch (error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: '❌ Error de red',
+                    text: 'No se pudo conectar con el servidor.'
+                });
+                console.error('Error al enviar el formulario:', error);
+            }
+        });
+    </script>
+</body>
+</html>
+{% endblock %}

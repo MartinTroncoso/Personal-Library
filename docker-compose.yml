@@ -1,22 +1,22 @@
-version: '3.9'
-
 services:
   web:
     build: .
     command: >
-     sh -c "python manage.py runserver 0.0.0.0:8000"
+      sh -c "pip install -r requirements.txt && python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/app
     ports:
       - "8000:8000"
     depends_on:
       - db
+      - redis
     environment:
       - DEBUG=1
       - DB_NAME=postgres
       - DB_USER=postgres
       - DB_PASSWORD=postgres
       - DB_HOST=db
+      - REDIS_URL=redis://redis:6379/0
 
   db:
     image: postgres:16
@@ -26,6 +26,41 @@ services:
       - POSTGRES_PASSWORD=postgres
     volumes:
       - pgdata:/var/lib/postgresql/data/
+
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+
+  celery:
+    build: .
+    command: celery -A Personal_project worker --loglevel=info
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+      - redis
+    environment:
+      - DB_NAME=postgres
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_HOST=db
+      - REDIS_URL=redis://redis:6379/0
+
+  beat:
+    build: .
+    command: celery -A Personal_project beat --loglevel=info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+      - redis
+    environment:
+      - DB_NAME=postgres
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_HOST=db
+      - REDIS_URL=redis://redis:6379/0
 
 volumes:
   pgdata:

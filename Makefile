@@ -8,6 +8,10 @@ makemigrations:
 migrate:
 	docker-compose exec web python manage.py migrate
 
+migrate_celery:
+	docker-compose exec web python manage.py migrate django_celery_beat
+	docker-compose exec web python manage.py shell < scripts/libro_del_dia.py
+
 startapp:
 	@read -p "Nombre de la nueva app: " app_name; \
 	docker-compose exec web python manage.py startapp $$app_name

@@ -1,65 +1,102 @@
-{% extends 'layouts/base.html' %}
+{% extends "layouts/base.html" %}
 {% block content %}
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body class="bg-light">
-    <div class="container py-5">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>📚 Biblioteca</h1>
-        <a href="{% url 'add_libro' %}" class="btn btn-success">+ Agregar libro</a>
-        </div>
+    <div class="d-flex">
+        <button id="boton_hamburguesa" type="button" data-bs-toggle="offcanvas" data-bs-target="#menuLateral" aria-controls="menuLateral">
+            <img src="{% static 'images/hamburger.png' %}" alt="Menú" id="icon"/>
+        </button>
 
-        {% if libros %}
-            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-                {% for libro in libros %}
-                <div class="col">
-                    <div class="card h-100 shadow-sm">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ libro.titulo }}</h5>
-                            <h6 class="card-subtitle mb-2 text-muted">{{ libro.autores }}</h6>
-                            <img src="{{ libro.portada }}" class="card-img-top" alt="Portada">
-                            <!-- <p class="card-text">{{ libro.descripcion|default:"Sin descripción." }}</p> -->
-                        </div>
-                        <div class="d-flex card-footer text-end" style="justify-content: end;">
-                            <a href="{% url 'libro' libro.id %}" class="btn btn-primary btn-sm me-2">Ver más</a>
-                            <form method="POST" action="{% url 'delete_libro' libro.id %}" onsubmit="return confirmarEliminacion(event)">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-danger btn-sm" name="delete_libro" value="{{ libro.id }}">Eliminar</button>
-                            </form>
+        <div class="offcanvas menuLateral" tabindex="-1" id="menuLateral" aria-labelledby="menuLateralLabel" data-bs-backdrop="false" data-bs-scroll="true">
+            <div class="offcanvas-header">
+              <h5 class="offcanvas-title" id="menuLateralLabel">Filtrar</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
+            </div>
+            <div class="offcanvas-body">
+                <aside>
+                    <b>Estado</b><br>
+                    <select id="estadoFiltro">
+                      <option value="TODOS">Todos</option>
+                      <option value="LEIDO">Leído</option>
+                      <option value="EN_PROGRESO">En progreso</option>
+                      <option value="NO_LEIDO">No leído</option>
+                    </select>
+                </aside>
+            </div>
+        </div>          
+
+        <div class="container py-5">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1>📚 Biblioteca</h1>
+                <a href="{% url 'add_libro' %}" class="btn btn-success">+ Agregar libro</a>
+            </div>
+
+            {% if libros %}
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4"">
+                    {% for libro in libros %}
+                    <div class="col">
+                        <div class="card h-100 shadow-sm libro" data-estado="{{ libro.estado }}">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ libro.titulo }}</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">{{ libro.autores }}</h6>
+                                <img src="{{ libro.portada }}" class="card-img-top" alt="Portada">
+                            </div>
+                            <div class="d-flex card-footer text-end align-items-center" style="justify-content: end; padding: 1%;">
+                                <div class="card-body">
+                                    {% if libro.estado == "LEIDO" %}
+                                        <p class="alert alert-info" role="alert" id="leido">LEÍDO</p>
+                                    {% elif libro.estado == "EN_PROGRESO" %}
+                                        <p class="alert alert-info" role="alert" id="leido">EN PROGRESO</p>
+                                    {% else %}
+                                        <p class="alert alert-danger" role="alert" id="leido">NO LEÍDO</p>
+                                    {% endif %}
+                                </div> 
+                                <a href="{% url 'libro' libro.id %}" class="btn btn-primary btn-sm me-2">Ver más</a>
+                                <form method="POST" action="{% url 'delete_libro' libro.id %}" onsubmit="return confirmarEliminacion(event)">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger btn-sm me-2" name="delete_libro" value="{{ libro.id }}">Eliminar</button>
+                                </form>
+                            </div>
                         </div>
                     </div>
+                    {% endfor %}
                 </div>
-                {% endfor %}
-            </div>
-        {% else %}
-            <p class="alert alert-info mt-4" role="alert">Todavía no guardaste ningún libro.</p>
-        {% endif %}
+                <div id="no-result" class="alert alert-info mt-4" style="display: none;">No se encontraron libros con ese estado.</div>
+            {% else %}
+                <p class="alert alert-info mt-4" role="alert">Todavía no guardaste ningún libro.</p>
+            {% endif %}
+        </div>
     </div>
 
     <script>
-        function confirmarEliminacion(event) {
-            event.preventDefault();  // detener el envío del formulario
+        document.getElementById("estadoFiltro").addEventListener("change", function () {
+            const valor = this.value;
+            const libros = document.querySelectorAll(".libro");
+            let visibles = 0;
 
-            Swal.fire({
-                icon: 'warning',
-                title: '¿Estás seguro de que deseas eliminar este libro?',
-                text: 'Esta acción no se puede deshacer.',
-                showCancelButton: true,
-                confirmButtonText: 'Sí, eliminar',
-                cancelButtonText: 'Cancelar'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    event.target.submit();  // si el usuario confirma, enviamos el formulario
+            libros.forEach(libro => {
+                const estado = libro.getAttribute("data-estado");
+
+                if (valor === "TODOS" || estado === valor) {
+                    libro.closest('.col').style.display = "block";
+                    visibles++;
+                } else {
+                    libro.closest('.col').style.display = "none";
                 }
             });
 
-            return false; // evitar el envío inmediato del form
-        }
+            // Mostrar mensaje si no hay resultados
+            const mensaje = document.getElementById("no-result");
+            if (mensaje) {
+                mensaje.style.display = visibles === 0 ? "block" : "none";
+            }
+        });
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

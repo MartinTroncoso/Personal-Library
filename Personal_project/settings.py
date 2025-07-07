@@ -136,7 +136,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 LOGIN_URL = '/login'
 LOGIN_REDIRECT_URL = '/'
 
-SESSION_COOKIE_AGE = 900
+SESSION_COOKIE_AGE = 3660
 SESSION_SAVE_EVERY_REQUEST = True # Actualiza la sesión cada vez que se hace una solicitud
 
 
@@ -157,3 +157,10 @@ LOGGING = {
 }
 
 AUTH_USER_MODEL = 'Application.Usuario'
+
+CELERY_BROKER_URL = os.getenv('REDIS_URL', 'redis://localhost:6379/0')
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+
+INSTALLED_APPS += [
+    'django_celery_beat',
+]

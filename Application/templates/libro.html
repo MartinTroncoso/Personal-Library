@@ -1,5 +1,6 @@
 {% extends 'layouts/base.html' %}
 {% block content %}
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,16 +9,19 @@
 </head>
 <body class="bg-light">
     <div class="container py-5">
-        <div class="mb-4 d-flex justify-content-between align-items-center">
+        <div class="d-flex justify-content-between align-items-center">
             <h1>{{ libro.titulo }}</h1>
-            <a href="{% url 'biblioteca' %}" class="btn btn-outline-secondary">← Volver</a>
+            <a href="{% url 'biblioteca' %}" class="btn btn-outline-secondary ms-4">← Volver</a>
         </div>
+        {% if libro.subtitulo  %}
+        <h5 class="mb-4">{{ libro.subtitulo }}</h5>
+        {% endif %}
 
         <div class="card shadow-sm">
             <div class="row g-0">
                 {% if libro.portada %}
                 <div class="col-md-4">
-                    <img src="{{ libro.portada }}" class="img-fluid rounded-start" alt="Portada del libro">
+                    <img src="{{ libro.portada }}" class="img-fluid rounded-start img_adjusted" alt="Portada del libro">
                 </div>
                 {% endif %}
                 <div class="col">
@@ -29,6 +33,30 @@
                             <small class="text-muted">Publicado el {{ libro.fecha }}</small>
                         </p>
                         {% endif %}
+
+                        {% if libro.visibilidad != "NO_PAGES" %}
+                            <form method="POST" action="{% url 'libro' libro.id %}" class="d-flex mb-3 align-items-center">
+                                {% csrf_token %}
+                                <label class="me-2">Estado</label>
+                                <select name="estado" class="d-block form-select me-2" style="width: 200px;">
+                                    <option value="NO_LEIDO" {% if libro.estado == "NO_LEIDO" %}selected{% endif %}>No leído</option>
+                                    <option value="LEIDO" {% if libro.estado == "LEIDO" %}selected{% endif %}>Leído</option>
+                                    <option value="EN_PROGRESO" {% if libro.estado == "EN_PROGRESO" %}selected{% endif %}>En progreso</option>
+                                </select>
+                                <button type="submit" class="btn btn-info text-white">Guardar</button>
+                            </form>
+
+                            <div class="d-flex align-items-center gap-3">
+                                <a href="{{ libro.link_lectura }}" target="_blank" class="btn btn-primary shadow-sm rounded-3 px-4">Leer</a>
+                                {% if libro.visibilidad == "ALL_PAGES" %}
+                                    <span>El libro puede ser leído en su totalidad sin necesidad de comprarlo</span>
+                                {% elif libro.visibilidad == "PARTIAL" %}
+                                    <b><span style="text-decoration: underline;">ADVERTENCIA</span>: Solo se pueden leer algunas páginas del libro. En caso de querer leerlo completo se debe comprar.</b>
+                                {% endif %}
+                            </div>
+                        {% else %}
+                            <p class="alert alert-info mt-4" role="alert">No hay enlace de lectura disponible.</p>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -37,6 +65,5 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-
 </html>
 {% endblock %}

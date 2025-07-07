@@ -1,17 +1,17 @@
 h1{
     color: #2e198d;
     font-size: 2em;
-    text-align: center;
+}
+
+html, body {
+    background-color: #f8f9fa;
+    height: 100%;
+    margin-top: 28px;
 }
 
 body {
-    background-color: #f8f9fa;
-}
-
-header {
-    background: linear-gradient(to right, #0d6efd, #6610f2);
-    color: white;
-    padding: 60px 0;
+    display: flex;
+    flex-direction: column;
 }
 
 .hero {
@@ -19,9 +19,26 @@ header {
     text-align: center;
 }
 
+header{
+    width: 100%;
+}
+.card {
+  transition: all 0.3s ease;
+}
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+h2 {
+  font-size: 2rem;
+}
+.display-4 {
+  font-size: 3rem;
+}
+
 .card-img-top {
     object-fit: cover;
-    height: 200px;
+    height: fit-content;
 }
 
 .profile_picture {
@@ -30,3 +47,73 @@ header {
     border-radius: 50%;
     margin: 0 auto;
 }
+
+.img_adjusted {
+    width: auto;
+    min-height: max(500px, 100%);
+    object-fit: cover;
+}
+
+.img_home {
+    width: auto;
+    height: 250px;
+}
+
+.libro_del_dia {
+    justify-content: center;
+    align-items: center;
+}
+
+#leido {
+    padding: 1%;
+    margin-bottom: 0%;
+    width: fit-content;
+}
+
+.menuLateral {
+    margin-top: 56px; 
+    z-index: 1;
+    min-width: 14%;
+    top: 0;
+    left: 0;
+}
+
+#boton_hamburguesa {
+    height: 2.5%;
+    width: auto;
+    margin: 10px 10px;
+    border: none;
+    background: none;
+    position: absolute;
+}
+
+footer{
+    z-index: 2; /* El z-index sirve para que un elemento esté adelante o atrás de otro. Cuanto más grande sea el valor, más prioridad tendrá de aparecer adelante */
+    margin-top: 48px;
+    padding: 24px;
+}
+
+#icon {
+    height: 100%;
+    width: auto;
+}
+
+.flex-fill {
+  flex-grow: 1; /* Esto permite que el main ocupe todo el espacio disponible entre header y footer */
+}
+
+/*
+div p {
+    font-size: 1.2em;
+    color: #333;
+    margin: 10px 0;
+} --> Esto afecta a todos los 'p' que estén adentro de un div
+
+position: fixed; --> Esto hace que el elemento se mantenga fijo en la pantalla, incluso cuando se desplaza hacia abajo.
+Esto es útil para elementos como encabezados o menús de navegación que deben estar siempre visibles.
+
+float: left; --> Esto hace que el elemento flote a la izquierda de su contenedor, permitiendo que otros elementos fluyan a su alrededor.
+
+*/
+
+
