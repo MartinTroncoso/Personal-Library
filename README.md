@@ -9,3 +9,5 @@ This application allows the user to search for any book available in the Google 
 ## Run the application
 This project uses Docker to successfully install all the dependencies and required packages. You will find the mandatory configuration files in the repository (docker-compose.yml, Dockerfile, requirements.txt). Makefile contains an abbreviation of some useful commands to test and configure the application. Following statement stands for 'docker-compose up', which starts the program on localhost:8000.
 * make up
+
+**Note**: Regarding the scheduled task (recommending one book per day), it is configured to run every 5 minutes in order to see the functionality, but the intention in a production environment would be to have one book recommended per day.
