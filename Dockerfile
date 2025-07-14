@@ -1,20 +1,24 @@
-# Imagen base con Python
 FROM python:3.11-slim
 
-# Setea directorio de trabajo
+RUN apt-get update && apt-get install -y netcat-openbsd postgresql-client && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 
-# Copia los archivos de requerimientos
 COPY requirements.txt .
 
-# Instala dependencias
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copia todo el proyecto
 COPY . .
 
-# Expone el puerto
 EXPOSE 8000
 
-# Comando por defecto al iniciar el contenedor
+# Copiar el script de entrada
+COPY entrypoint.sh /entrypoint.sh
+COPY entrypoint-celery.sh /entrypoint-celery.sh
+RUN chmod +x /entrypoint.sh /entrypoint-celery.sh
+
+# Usar como entrypoint
+ENTRYPOINT ["/entrypoint.sh"]
+
+# Comando por defecto (se pasa a "$@" en el entrypoint)
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

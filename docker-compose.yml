@@ -1,8 +1,6 @@
 services:
   web:
     build: .
-    command: >
-      sh -c "pip install -r requirements.txt && python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/app
     ports:
@@ -34,6 +32,7 @@ services:
 
   celery:
     build: .
+    entrypoint: /entrypoint-celery.sh
     command: celery -A Personal_project worker --loglevel=info
     volumes:
       - .:/app
@@ -49,6 +48,7 @@ services:
 
   beat:
     build: .
+    entrypoint: /entrypoint-celery.sh
     command: celery -A Personal_project beat --loglevel=info --scheduler django_celery_beat.schedulers:DatabaseScheduler
     volumes:
       - .:/app

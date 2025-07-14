@@ -1,5 +1,6 @@
 # Makefile para GitBash
 up:
+	docker-compose build
 	docker-compose up
 
 makemigrations:

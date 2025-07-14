@@ -43,12 +43,12 @@
               <ul class="list-unstyled text-muted">
                 <li>
                   {% if fecha_ultimo_libro_agregado %}
-                    <p>📅 Último: {{ datos_fecha.day }}/{{ datos_fecha.month }}/{{ datos_fecha.year }}</p>
+                    <p>📅 Fecha último agregado: {{ datos_fecha.day }} de {{ datos_fecha.month }} de {{ datos_fecha.year }}</p>
                   {% else %}
                     <p>No hay libros aún.</p>
                   {% endif %}
                 </li>
-                <li>🔢 Total: {{ cantidad_libros_guardados }}</li>
+                <li>🔢 Libros guardados: {{ cantidad_libros_guardados }}</li>
                 <li>📖 Último título: {{ ultimo_libro_agregado.titulo }}</li>
               </ul>
             </div>
