@@ -13,8 +13,8 @@ COPY . .
 EXPOSE 8000
 
 # Copiar el script de entrada
-COPY entrypoint.sh /entrypoint.sh
-COPY entrypoint-celery.sh /entrypoint-celery.sh
+COPY docker/entrypoint.sh /entrypoint.sh
+COPY docker/entrypoint-celery.sh /entrypoint-celery.sh
 RUN chmod +x /entrypoint.sh /entrypoint-celery.sh
 
 # Usar como entrypoint

@@ -1,0 +1,15 @@
+# For Bash and shell scripts
+*.sh text eol=lf
+
+# For Python files
+*.py text eol=lf
+
+# For Docker-related configs
+*.yml text eol=lf
+*.yaml text eol=lf
+*.env text eol=lf
+Dockerfile text eol=lf
+
+# For Markdown/docs
+*.md text eol=lf
+
