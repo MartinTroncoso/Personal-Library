@@ -1,0 +1,11 @@
+# This file is meant to allow the use of 'black .' without making any changes to the migrations or virtual environment.
+[tool.black]
+line-length = 88
+target-version = ["py311"]
+exclude = '''
+/(
+    venv
+  | migrations
+  | __pycache__
+)/
+'''

@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('Application', '0012_libro_subtitulo'),
+        ("Application", "0012_libro_subtitulo"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='libro',
-            name='autores',
+            model_name="libro",
+            name="autores",
             field=models.CharField(max_length=500),
         ),
     ]

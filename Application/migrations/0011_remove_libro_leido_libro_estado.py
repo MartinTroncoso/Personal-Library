@@ -6,17 +6,25 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('Application', '0010_libro_link_lectura_libro_visibilidad'),
+        ("Application", "0010_libro_link_lectura_libro_visibilidad"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='libro',
-            name='leido',
+            model_name="libro",
+            name="leido",
         ),
         migrations.AddField(
-            model_name='libro',
-            name='estado',
-            field=models.CharField(choices=[('LEIDO', 'Leído'), ('NO_LEIDO', 'No leído'), ('EN_PROGRESO', 'En progreso')], default='NO_LEIDO', max_length=20),
+            model_name="libro",
+            name="estado",
+            field=models.CharField(
+                choices=[
+                    ("LEIDO", "Leído"),
+                    ("NO_LEIDO", "No leído"),
+                    ("EN_PROGRESO", "En progreso"),
+                ],
+                default="NO_LEIDO",
+                max_length=20,
+            ),
         ),
     ]
