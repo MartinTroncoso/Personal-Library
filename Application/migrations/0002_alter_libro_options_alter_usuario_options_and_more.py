@@ -6,46 +6,48 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('Application', '0001_initial'),
+        ("Application", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='libro',
-            options={'verbose_name': 'Libro', 'verbose_name_plural': 'Libros'},
+            name="libro",
+            options={"verbose_name": "Libro", "verbose_name_plural": "Libros"},
         ),
         migrations.AlterModelOptions(
-            name='usuario',
-            options={'verbose_name': 'Usuario', 'verbose_name_plural': 'Usuarios'},
+            name="usuario",
+            options={"verbose_name": "Usuario", "verbose_name_plural": "Usuarios"},
         ),
         migrations.AddField(
-            model_name='libro',
-            name='autor',
-            field=models.CharField(default='juanchota', max_length=50),
+            model_name="libro",
+            name="autor",
+            field=models.CharField(default="juanchota", max_length=50),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='libro',
-            name='fecha',
+            model_name="libro",
+            name="fecha",
             field=models.DateField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='libro',
-            name='titulo',
-            field=models.CharField(default='Soplando velitas', max_length=50),
+            model_name="libro",
+            name="titulo",
+            field=models.CharField(default="Soplando velitas", max_length=50),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='libro',
-            name='usuario',
-            field=models.ManyToManyField(related_name='libros', to='Application.usuario'),
+            model_name="libro",
+            name="usuario",
+            field=models.ManyToManyField(
+                related_name="libros", to="Application.usuario"
+            ),
         ),
         migrations.AlterModelTable(
-            name='libro',
-            table='Libro',
+            name="libro",
+            table="Libro",
         ),
         migrations.AlterModelTable(
-            name='usuario',
-            table='Usuario',
+            name="usuario",
+            table="Usuario",
         ),
     ]

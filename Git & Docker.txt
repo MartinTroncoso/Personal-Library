@@ -105,3 +105,4 @@ COMANDOS A CORRER:
 	Construir las imágenes --> docker-compose build
 	Levantar el servidor --> docker-compose up (acceder a http://localhost:8000)
 	Si se quiere eliminar todo para volver a buildear --> docker-compose down --volumes --remove-orphans
+	BORRAR TODO --> docker system prune -a --volumes -f

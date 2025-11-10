@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('Application', '0009_alter_libro_titulo'),
+        ("Application", "0009_alter_libro_titulo"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='libro',
-            name='link_lectura',
+            model_name="libro",
+            name="link_lectura",
             field=models.URLField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='libro',
-            name='visibilidad',
-            field=models.CharField(default='UNKNOWN', max_length=10),
+            model_name="libro",
+            name="visibilidad",
+            field=models.CharField(default="UNKNOWN", max_length=10),
         ),
     ]

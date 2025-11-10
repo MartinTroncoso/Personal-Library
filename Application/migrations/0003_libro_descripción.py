@@ -6,14 +6,14 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('Application', '0002_alter_libro_options_alter_usuario_options_and_more'),
+        ("Application", "0002_alter_libro_options_alter_usuario_options_and_more"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='libro',
-            name='descripción',
-            field=models.TextField(default='Librito choto que escribiste forro'),
+            model_name="libro",
+            name="descripción",
+            field=models.TextField(default="Librito choto que escribiste forro"),
             preserve_default=False,
         ),
     ]
