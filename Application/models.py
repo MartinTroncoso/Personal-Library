@@ -10,7 +10,7 @@ class Usuario(AbstractUser):
         verbose_name = "Usuario"
         verbose_name_plural = "Usuarios"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.username
 
 
@@ -37,7 +37,7 @@ class Libro(models.Model):
         verbose_name = "Libro"
         verbose_name_plural = "Libros"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.titulo
 
 
@@ -55,5 +55,5 @@ class LibroDelDia(models.Model):
         db_table = "LibroDelDia"
         verbose_name = "LibroDelDia"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.titulo

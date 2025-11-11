@@ -1,12 +1,13 @@
 import json
 from datetime import datetime
+from typing import Union
 
 from dateutil import parser  # type: ignore
 from django.contrib import messages
 from django.contrib.auth import authenticate, get_user_model, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
-from django.http import JsonResponse
+from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.timezone import now
 from django.views.decorators.http import require_POST
@@ -31,7 +32,7 @@ meses = [
 ]
 
 
-def login_view(request):
+def login_view(request: HttpRequest) -> HttpResponse:
     if request.user.is_authenticated:
         return redirect("index")
 
@@ -57,14 +58,16 @@ def login_view(request):
     else:
         form_login = forms.Login()
 
-    return render(
-        request,
-        "login.html",
-        {"form_login": form_login, "timestamp": now().timestamp()},
-    )
+    # A dictionary which keys are strings and the values can be either forms.Login or float
+    context: dict[str, Union[forms.Login, float]] = {
+        "form_login": form_login,
+        "timestamp": now().timestamp()
+    }
+
+    return render(request, "login.html", context)
 
 
-def register_view(request):
+def register_view(request: HttpRequest) -> HttpResponse:
     if request.user.is_authenticated:
         return redirect("index")
 
@@ -101,7 +104,7 @@ def register_view(request):
     )
 
 
-def logout_view(request):
+def logout_view(request: HttpRequest) -> HttpResponse:
     logout(request)
     return redirect("login")
 
@@ -110,7 +113,7 @@ def logout_view(request):
 
 
 @login_required
-def index(request):
+def index(request: HttpRequest) -> HttpResponse:
     libro_del_dia = models.LibroDelDia.objects.last()
 
     if fecha_ultimo_libro_agregado:
@@ -121,7 +124,7 @@ def index(request):
             "hour": fecha_ultimo_libro_agregado.strftime("%H:%M:%S"),
         }
     else:
-        datos_fecha = {}
+        datos_fecha: dict = {}
 
     return render(
         request,
@@ -138,7 +141,7 @@ def index(request):
 
 
 @login_required
-def biblioteca_view(request):
+def biblioteca_view(request: HttpRequest) -> HttpResponse:
     libros = models.Libro.objects.filter(usuario=request.user.id)
     return render(
         request, "biblioteca.html", {"libros": libros, "timestamp": now().timestamp()}
@@ -146,7 +149,7 @@ def biblioteca_view(request):
 
 
 @login_required
-def add_libro_view(request):
+def add_libro_view(request: HttpRequest) -> HttpResponse:
     if request.method == "POST":
         try:
             datos = json.loads(request.body)
@@ -195,7 +198,7 @@ def add_libro_view(request):
 
 
 @login_required
-def libro_view(request, id):
+def libro_view(request: HttpRequest, id: int) -> HttpResponse:
     libro = get_object_or_404(models.Libro, id=id)
 
     if request.method == "POST":
@@ -212,7 +215,7 @@ def libro_view(request, id):
 
 
 @login_required
-def libro_del_dia_view(request):
+def libro_del_dia_view(request: HttpRequest) -> HttpResponse:
     libro_del_dia = models.LibroDelDia.objects.last()
 
     if request.method == "POST":
@@ -280,7 +283,7 @@ def libro_del_dia_view(request):
 
 @login_required
 @require_POST
-def delete_libro_view(request, id):
+def delete_libro_view(request: HttpRequest, id: int) -> HttpResponse:
     try:
         libro = get_object_or_404(models.Libro, id=id)
         libro.delete()
@@ -291,5 +294,5 @@ def delete_libro_view(request, id):
         return redirect("biblioteca")
 
 
-def cantidad_libros_guardados(user_id):
+def cantidad_libros_guardados(user_id: int) -> int:
     return models.Libro.objects.filter(usuario=user_id).count()
