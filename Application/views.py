@@ -58,10 +58,10 @@ def login_view(request: HttpRequest) -> HttpResponse:
     else:
         form_login = forms.Login()
 
-    # A dictionary which keys are strings and the values can be either forms.Login or float
+    # A dictionary which keys are str and the values can be either forms.Login or float
     context: dict[str, Union[forms.Login, float]] = {
         "form_login": form_login,
-        "timestamp": now().timestamp()
+        "timestamp": now().timestamp(),
     }
 
     return render(request, "login.html", context)
@@ -109,7 +109,7 @@ def logout_view(request: HttpRequest) -> HttpResponse:
     return redirect("login")
 
 
-################ VISTAS ################
+# ----------- VISTAS ----------- #
 
 
 @login_required
@@ -270,7 +270,7 @@ def libro_del_dia_view(request: HttpRequest) -> HttpResponse:
                         "message": "El libro del día ya está en tu biblioteca",
                     }
                 )
-        except Exception as e:
+        except Exception:
             messages.error(request, "Error al agregar el libro del día a tu biblioteca")
             return redirect("index")
 
@@ -289,7 +289,7 @@ def delete_libro_view(request: HttpRequest, id: int) -> HttpResponse:
         libro.delete()
         messages.success(request, "Libro eliminado correctamente")
         return redirect("biblioteca")
-    except Exception as e:
+    except Exception:
         messages.error(request, "Error al eliminar el libro")
         return redirect("biblioteca")
 

@@ -6,8 +6,6 @@ class Command(BaseCommand):
     help = "Configures the periodic task libro_del_dia"
 
     def handle(self, *args, **kwargs):
-        from Application.tasks import libro_del_dia
-
         schedule, _ = CrontabSchedule.objects.get_or_create(
             minute="*/5",
             hour="*",
