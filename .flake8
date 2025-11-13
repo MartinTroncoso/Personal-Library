@@ -8,4 +8,4 @@ exclude =
     __pycache__,
     manage.py
 ignore =
-    E203, E251, W503
+    E203, E251, W503, W291

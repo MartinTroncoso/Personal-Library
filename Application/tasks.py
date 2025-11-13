@@ -40,7 +40,7 @@ def libro_del_dia():
         data = response.json()
         if "items" not in data:
             return "❌ No books were found"
-        
+
         libros_validos = [
             item
             for item in data["items"]
@@ -52,7 +52,8 @@ def libro_del_dia():
     if not libros_validos:
         return "❌ No books with visible pages were found"
 
-    LibroDelDia.objects.all().delete()  # Limpiar la tabla antes de guardar un nuevo libro
+    # Limpiar la tabla antes de guardar un nuevo libro
+    LibroDelDia.objects.all().delete()
 
     libro = random.choice(libros_validos)
 
@@ -71,4 +72,6 @@ def libro_del_dia():
         link_lectura=volumeInfo.get("infoLink"),
     )
 
-    return f"✅ Book saved: {volumeInfo.get('title')}, description: {volumeInfo.get('description')}, subtitle: {volumeInfo.get('subtitle')}"
+    return f"""✅ Book saved: {volumeInfo.get('title')}, 
+            description: {volumeInfo.get('description')}, 
+            subtitle: {volumeInfo.get('subtitle')}"""
