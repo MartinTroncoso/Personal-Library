@@ -40,7 +40,7 @@ def libro_del_dia():
         data = response.json()
         if "items" not in data:
             return "❌ No books were found"
-        
+
         libros_validos = [
             item
             for item in data["items"]
@@ -71,4 +71,6 @@ def libro_del_dia():
         link_lectura=volumeInfo.get("infoLink"),
     )
 
-    return f"✅ Book saved: {volumeInfo.get('title')}, description: {volumeInfo.get('description')}, subtitle: {volumeInfo.get('subtitle')}"
+    return f"""✅ Book saved: {volumeInfo.get('title')}, 
+            description: {volumeInfo.get('description')}, 
+            subtitle: {volumeInfo.get('subtitle')}"""
