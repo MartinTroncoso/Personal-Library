@@ -52,14 +52,14 @@ def libro_del_dia():
     if not libros_validos:
         return "❌ No books with visible pages were found"
 
-    LibroDelDia.objects.all().delete()  # Limpiar la tabla antes de guardar un nuevo libro
+    LibroDelDia.objects.all().delete()  # Clean up the table before saving a book
 
     libro = random.choice(libros_validos)
 
     volumeInfo = libro.get("volumeInfo", {})
     accessInfo = libro.get("accessInfo", {})
 
-    # Guardarlo en la base de datos
+    # Save it in the database
     LibroDelDia.objects.create(
         titulo=volumeInfo.get("title"),
         subtitulo=volumeInfo.get("subtitle"),

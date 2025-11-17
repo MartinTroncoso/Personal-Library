@@ -143,18 +143,33 @@ SESSION_SAVE_EVERY_REQUEST = (
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
-    "handlers": {
-        "console": {
-            "level": "DEBUG",
-            "class": "logging.StreamHandler",
-            "stream": sys.stdout,
+    "formatters": {
+        "default": {
+            "format": "[{asctime}] {levelname} {name}: {message}",
+            "style": "{",
         },
     },
-    "root": {
-        "handlers": ["console"],
-        "level": "DEBUG",
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "default",
+        },
+        "file": {
+            "class": "logging.FileHandler",
+            "filename": "logs/app.log",
+            "formatter": "default",
+        },
+    },
+    "loggers": {
+        "django": {"handlers": ["console"], "level": "WARNING"},
+        "Application": {
+            "handlers": ["console", "file"],
+            "level": "DEBUG",
+            "propagate": False,
+        },
     },
 }
+
 
 AUTH_USER_MODEL = "Application.Usuario"
 
