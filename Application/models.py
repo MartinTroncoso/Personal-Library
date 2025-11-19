@@ -27,7 +27,7 @@ class Libro(models.Model):
     estado: Any = models.CharField(
         max_length=20, choices=ESTADO_CHOICES, default="NO_LEIDO"
     )
-    titulo: Any = models.CharField(max_length=150)
+    titulo: Any = models.CharField(max_length=200)
     subtitulo: Any = models.CharField(max_length=150, null=True, blank=True)
     descripcion: Any = models.TextField()
     autores: Any = models.CharField(max_length=500)

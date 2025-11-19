@@ -12,4 +12,5 @@ urlpatterns = [
     path("libro/<int:id>", views.libro_view, name="libro"),
     path("delete_libro/<int:id>", views.delete_libro_view, name="delete_libro"),
     path("libro_del_dia", views.libro_del_dia_view, name="libro_del_dia"),
+    path("test-error", views.test_error, name="test-error"),
 ]

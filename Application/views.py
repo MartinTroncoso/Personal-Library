@@ -33,6 +33,7 @@ meses = [
 
 logger = logging.getLogger(__name__)
 
+
 def login_view(request):
     if request.user.is_authenticated:
         logger.info("User is already authenticated, redirecting to home page")
@@ -64,7 +65,7 @@ def login_view(request):
 
     context: dict[str, forms.Login | float] = {
         "form_login": form_login,
-        "timestamp": now().timestamp()
+        "timestamp": now().timestamp(),
     }
 
     return render(request, "login.html", context)
@@ -94,9 +95,7 @@ def register_view(request):
                     logger.info("User registered successfully!")
                     return redirect("index")
                 except IntegrityError:
-                    form_register.add_error(
-                        None, "The user is already registered"
-                    )
+                    form_register.add_error(None, "The user is already registered")
                     logger.error("The user is already registered.")
             else:
                 form_register.add_error(None, "The passwords do not match")
@@ -117,7 +116,7 @@ def logout_view(request):
     return redirect("login")
 
 
-################ VISTAS ################
+# ------------ VISTAS ------------ #
 
 
 @login_required
@@ -184,9 +183,9 @@ def add_libro_view(request):
                 nuevo_libro.usuario.set([request.user.id])
                 global fecha_ultimo_libro_agregado
                 fecha_ultimo_libro_agregado = datetime.now()
-                
+
                 logger.info("New book added")
-                
+
                 return JsonResponse({"status": "success", "accion": "nuevo"})
             elif request.user.id not in models.Libro.objects.get(
                 titulo=nuevo_libro.titulo,
@@ -197,9 +196,9 @@ def add_libro_view(request):
                     titulo=nuevo_libro.titulo, autores=nuevo_libro.autores
                 ).usuario.add(request.user.id)
                 fecha_ultimo_libro_agregado = datetime.now()
-                
+
                 logger.info("A new user added the book")
-                
+
                 return JsonResponse(
                     {"status": "success", "accion": "existente_nuevo_usuario"}
                 )
@@ -255,7 +254,7 @@ def libro_del_dia_view(request):
 
                 global fecha_ultimo_libro_agregado
                 fecha_ultimo_libro_agregado = datetime.now()
-                
+
                 logger.info("Book of the day added to your library.")
 
                 return JsonResponse(
@@ -274,9 +273,9 @@ def libro_del_dia_view(request):
                     titulo=libro_del_dia.titulo, autores=libro_del_dia.autores
                 ).usuario.add(request.user.id)
                 fecha_ultimo_libro_agregado = datetime.now()
-                
+
                 logger.info("Book of the day added to your library.")
-                
+
                 return JsonResponse(
                     {
                         "status": "success",
@@ -295,8 +294,10 @@ def libro_del_dia_view(request):
                 )
         except Exception as e:
             # Visible to the user in the UI, not shown in console or logs
-            messages.error(request, "Error upon adding the book of the day to your library")
-            
+            messages.error(
+                request, "Error upon adding the book of the day to your library"
+            )
+
             # Shown in the console and logs
             logger.error(str(e))
             return redirect("index")
@@ -325,3 +326,7 @@ def delete_libro_view(request, id):
 
 def cantidad_libros_guardados(user_id):
     return models.Libro.objects.filter(usuario=user_id).count()
+
+
+def test_error(request):
+    raise ValueError("Test error")
