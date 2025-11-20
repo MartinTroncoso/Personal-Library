@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 import os
-import sys
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -27,7 +26,7 @@ SECRET_KEY = "django-insecure-xn*20l1a&8gu4yhea-2hy@b^%sv6tp@0c!_3d=3qwtzb+ogolv
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS: list[str] = []
 
 
 # Application definition
@@ -158,6 +157,8 @@ LOGGING = {
             "class": "logging.FileHandler",
             "filename": "logs/app.log",
             "formatter": "default",
+            "maxBytes": 2 * 1024 * 1024,  # 2 MB
+            "backupCount": 5,  # it keeps 5 old files
         },
     },
     "loggers": {
