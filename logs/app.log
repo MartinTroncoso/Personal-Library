@@ -11,3 +11,8 @@
 [2025-11-17 18:20:53,861] DEBUG Application.views: The book is already in your library
 [2025-11-17 18:20:55,251] DEBUG Application.views: The book is already in your library
 [2025-11-17 18:20:58,093] INFO Application.views: New book added
+[2025-11-20 17:46:40,808] INFO Application.views: Book status changed to LEIDO
+[2025-11-20 17:47:02,988] INFO Application.views: Book status changed to LEIDO
+[2025-11-20 17:47:06,343] INFO Application.views: Book status changed to LEIDO
+[2025-11-20 17:47:25,728] INFO Application.views: Book status changed to NO_LEIDO
+[2025-11-20 17:47:31,823] INFO Application.views: Book status changed to EN_PROGRESO
