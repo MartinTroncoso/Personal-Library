@@ -154,7 +154,7 @@ LOGGING = {
             "formatter": "default",
         },
         "file": {
-            "class": "logging.FileHandler",
+            "class": "logging.handlers.RotatingFileHandler",
             "filename": "logs/app.log",
             "formatter": "default",
             "maxBytes": 2 * 1024 * 1024,  # 2 MB
