@@ -15,3 +15,9 @@
 [2025-11-28 16:25:36,770] INFO Application.views: Login successful!
 [2025-11-28 16:26:03,032] INFO Application.views: Book of the day added to your library.
 [2025-11-28 16:33:48,098] INFO Application.views: The book of the day is already in your library.
+[2025-11-28 20:04:39,573] INFO Application.views: Login successful!
+[2025-11-28 20:04:41,208] INFO Application.views: The book of the day is already in your library.
+[2025-11-28 20:04:42,630] INFO Application.views: The book of the day is already in your library.
+[2025-11-28 20:04:47,056] INFO Application.views: Book deleted successfully.
+[2025-11-28 20:04:48,897] INFO Application.views: Book of the day added to your library.
+[2025-11-28 20:04:50,445] INFO Application.views: The book of the day is already in your library.
