@@ -28,6 +28,11 @@ DEBUG = True
 
 ALLOWED_HOSTS: list[str] = []
 
+# In development:
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8000",
+]
+CORS_ALLOW_CREDENTIALS = True
 
 # Application definition
 
@@ -39,10 +44,12 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "Application.apps.ApplicationConfig",
+    "corsheaders",  # Ticket 9
 ]
 
 MIDDLEWARE = [
     "Application.middleware.error-handler.GlobalExceptionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",  # Ticket 9
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",

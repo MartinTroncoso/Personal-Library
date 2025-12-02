@@ -11,20 +11,7 @@
 [2025-11-17 18:20:53,861] DEBUG Application.views: The book is already in your library
 [2025-11-17 18:20:55,251] DEBUG Application.views: The book is already in your library
 [2025-11-17 18:20:58,093] INFO Application.views: New book added
-[2025-11-19 18:55:27,154] INFO Application.views: Login successful!
-[2025-11-19 18:55:37,476] ERROR Application.views: value too long for type character varying(150)
-
-[2025-11-19 18:57:11,855] ERROR Application.views: value too long for type character varying(150)
-
-[2025-11-19 18:57:47,772] ERROR Application.views: value too long for type character varying(150)
-HOLA
-[2025-11-19 18:58:19,268] ERROR Application.views: value too long for type character varying(150)
-
-[2025-11-19 18:59:29,783] INFO Application.views: Book of the day added to your library.
-[2025-11-19 19:36:42,445] INFO Application.views: Book of the day added to your library.
-[2025-11-19 19:36:44,098] INFO Application.views: The book of the day is already in your library.
-[2025-11-19 20:18:09,905] INFO Application.views: Book of the day added to your library.
-[2025-11-19 20:18:11,426] INFO Application.views: The book of the day is already in your library.
-[2025-11-19 20:18:15,827] INFO Application.views: The book of the day is already in your library.
-[2025-11-19 20:18:20,663] INFO Application.views: Book deleted successfully.
-[2025-11-19 20:18:23,205] INFO Application.views: Book deleted successfully.
+[2025-11-26 19:52:43,918] INFO Application.views: Login successful!
+[2025-11-26 19:52:45,388] INFO Application.views: The book of the day is already in your library.
+[2025-11-26 19:52:51,666] INFO Application.views: Book deleted successfully.
+[2025-11-26 19:52:56,842] INFO Application.views: The book of the day is already in your library.

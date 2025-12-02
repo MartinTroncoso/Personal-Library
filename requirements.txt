@@ -6,3 +6,4 @@ celery
 redis
 django-celery-beat
 requests
+django-cors-headers
