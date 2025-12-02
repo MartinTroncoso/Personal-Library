@@ -6,3 +6,5 @@ celery
 redis
 django-celery-beat
 requests
+django-environ==0.11.2
+django-cors-headers
