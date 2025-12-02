@@ -162,9 +162,11 @@ LOGGING = {
             "formatter": "default",
         },
         "file": {
-            "class": "logging.FileHandler",
+            "class": "logging.handlers.RotatingFileHandler",
             "filename": "logs/app.log",
             "formatter": "default",
+            "maxBytes": 2 * 1024 * 1024,  # 2 MB
+            "backupCount": 5,  # it keeps 5 old files
         },
     },
     "loggers": {
