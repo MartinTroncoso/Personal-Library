@@ -12,7 +12,7 @@ class Usuario(AbstractUser):
         verbose_name = "Usuario"
         verbose_name_plural = "Usuarios"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.username
 
 
@@ -27,7 +27,7 @@ class Libro(models.Model):
     estado: Any = models.CharField(
         max_length=20, choices=ESTADO_CHOICES, default="NO_LEIDO"
     )
-    titulo: Any = models.CharField(max_length=150)
+    titulo: Any = models.CharField(max_length=200)
     subtitulo: Any = models.CharField(max_length=150, null=True, blank=True)
     descripcion: Any = models.TextField()
     autores: Any = models.CharField(max_length=500)
@@ -41,7 +41,7 @@ class Libro(models.Model):
         verbose_name = "Libro"
         verbose_name_plural = "Libros"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.titulo
 
 
@@ -59,5 +59,5 @@ class LibroDelDia(models.Model):
         db_table = "LibroDelDia"
         verbose_name = "LibroDelDia"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.titulo

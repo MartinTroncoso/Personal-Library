@@ -11,11 +11,35 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 import os
+import environ
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+env = environ.Env()
+env_file = BASE_DIR / ".env"
+if env_file.exists():
+    environ.Env.read_env(str(env_file))
+
+# DATABASE CONFIG
+DATABASE_URL = env("DATABASE_URL", default=None)
+
+if DATABASE_URL:
+    # Priority 1: DATABASE_URL
+    DATABASES = {"default": env.db()}
+else:
+    # Priority 2: variables separated
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": env("DB_NAME", default="postgres"),
+            "USER": env("DB_USER", default="postgres"),
+            "PASSWORD": env("DB_PASSWORD", default="postgres"),
+            "HOST": env("DB_HOST", default="localhost"),
+            "PORT": env("DB_PORT", default="5432"),
+        }
+    }
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -28,6 +52,11 @@ DEBUG = True
 
 ALLOWED_HOSTS: list[str] = []
 
+# In development:
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8000",
+]
+CORS_ALLOW_CREDENTIALS = True
 
 # Application definition
 
@@ -39,9 +68,12 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "Application.apps.ApplicationConfig",
+    "corsheaders",  # Ticket 9
 ]
 
 MIDDLEWARE = [
+    "Application.middleware.error-handler.GlobalExceptionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",  # Ticket 9
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -154,9 +186,11 @@ LOGGING = {
             "formatter": "default",
         },
         "file": {
-            "class": "logging.FileHandler",
+            "class": "logging.handlers.RotatingFileHandler",
             "filename": "logs/app.log",
             "formatter": "default",
+            "maxBytes": 2 * 1024 * 1024,  # 2 MB
+            "backupCount": 5,  # it keeps 5 old files
         },
     },
     "loggers": {
