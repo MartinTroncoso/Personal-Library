@@ -8,7 +8,7 @@ from .models import LibroDelDia
 
 
 @shared_task
-def libro_del_dia():
+def libro_del_dia() -> str:
     letras = "abcdefghijklmnopqrstuvwxyz"
     letra_aleatoria = random.choice(letras)
 

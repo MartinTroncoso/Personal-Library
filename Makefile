@@ -21,7 +21,7 @@ superuser:
 	winpty docker-compose exec -it web python manage.py createsuperuser
 
 shell:
-	winpty docker-compose exec web python manage.py Shell
+	winpty docker-compose exec web python manage.py shell
 
 show_urls:
 	docker-compose exec web python manage.py show_urls
