@@ -52,6 +52,11 @@ DEBUG = True
 
 ALLOWED_HOSTS: list[str] = []
 
+# In development:
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8000",
+]
+CORS_ALLOW_CREDENTIALS = True
 
 # Application definition
 
@@ -63,9 +68,12 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "Application.apps.ApplicationConfig",
+    "corsheaders",  # Ticket 9
 ]
 
 MIDDLEWARE = [
+    "Application.middleware.error-handler.GlobalExceptionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",  # Ticket 9
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -178,9 +186,11 @@ LOGGING = {
             "formatter": "default",
         },
         "file": {
-            "class": "logging.FileHandler",
+            "class": "logging.handlers.RotatingFileHandler",
             "filename": "logs/app.log",
             "formatter": "default",
+            "maxBytes": 2 * 1024 * 1024,  # 2 MB
+            "backupCount": 5,  # it keeps 5 old files
         },
     },
     "loggers": {
