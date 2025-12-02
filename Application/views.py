@@ -8,6 +8,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, get_user_model, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
+from django.middleware.csrf import get_token
 from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.timezone import now
@@ -328,6 +329,10 @@ def delete_libro_view(request: HttpRequest, id: int) -> HttpResponse:
 
 def cantidad_libros_guardados(user_id: int) -> int:
     return models.Libro.objects.filter(usuario=user_id).count()
+
+
+def csrf(request):
+    return JsonResponse({"csrfToken": get_token(request)})
 
 
 def test_error(request):
