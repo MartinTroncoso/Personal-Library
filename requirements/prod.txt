@@ -1,0 +1,3 @@
+-r base.txt
+gunicorn
+whitenoise  # to serve static files if you don't use CDN

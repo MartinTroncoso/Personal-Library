@@ -1,0 +1,9 @@
+Django>=4.2,<5.0
+djangorestframework>=3.14
+psycopg2-binary>=2.9  # if you use Postgres
+python-dotenv>=1.0  # if you workwith environment variables
+schedule
+celery
+redis
+django-celery-beat
+requests

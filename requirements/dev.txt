@@ -1,0 +1,8 @@
+-r base.txt # this is to use everything in base.txt
+black
+flake8
+mypy
+pytest
+pytest-django
+factory-boy
+ipython

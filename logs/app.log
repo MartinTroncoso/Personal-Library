@@ -11,3 +11,9 @@
 [2025-11-17 18:20:53,861] DEBUG Application.views: The book is already in your library
 [2025-11-17 18:20:55,251] DEBUG Application.views: The book is already in your library
 [2025-11-17 18:20:58,093] INFO Application.views: New book added
+[2025-12-01 19:40:50,690] INFO Application.views: Login successful!
+[2025-12-01 19:40:55,918] INFO Application.views: The book of the day is already in your library.
+[2025-12-02 17:58:57,182] INFO Application.views: Login successful!
+[2025-12-02 17:58:59,304] INFO Application.views: The book of the day is already in your library.
+[2025-12-02 17:59:05,094] INFO Application.views: Book deleted successfully.
+[2025-12-02 17:59:07,808] INFO Application.views: Book of the day added to your library.
