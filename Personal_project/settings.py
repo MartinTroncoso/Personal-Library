@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 import os
-import sys
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -27,8 +26,13 @@ SECRET_KEY = "django-insecure-xn*20l1a&8gu4yhea-2hy@b^%sv6tp@0c!_3d=3qwtzb+ogolv
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS: list[str] = []
 
+# In development:
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8000",
+]
+CORS_ALLOW_CREDENTIALS = True
 
 # Application definition
 
@@ -40,9 +44,11 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "Application.apps.ApplicationConfig",
+    "corsheaders",  # Ticket 9
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",  # Ticket 9
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -143,18 +149,33 @@ SESSION_SAVE_EVERY_REQUEST = (
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
-    "handlers": {
-        "console": {
-            "level": "DEBUG",
-            "class": "logging.StreamHandler",
-            "stream": sys.stdout,
+    "formatters": {
+        "default": {
+            "format": "[{asctime}] {levelname} {name}: {message}",
+            "style": "{",
         },
     },
-    "root": {
-        "handlers": ["console"],
-        "level": "DEBUG",
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "default",
+        },
+        "file": {
+            "class": "logging.FileHandler",
+            "filename": "logs/app.log",
+            "formatter": "default",
+        },
+    },
+    "loggers": {
+        "django": {"handlers": ["console"], "level": "WARNING"},
+        "Application": {
+            "handlers": ["console", "file"],
+            "level": "DEBUG",
+            "propagate": False,
+        },
     },
 }
+
 
 AUTH_USER_MODEL = "Application.Usuario"
 

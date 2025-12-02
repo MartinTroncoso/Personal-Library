@@ -1,11 +1,11 @@
 # flake8 analyzes Python code and shows warnings about style errors, unused imports, repeated or unnecessary code, and long lines (longer than max-line-length)
 
 [flake8]
-max-line-length = 88
+max-line-length = 91
 exclude =
     venv,
     migrations,
     __pycache__,
     manage.py
 ignore =
-    E203, E251, W503
+    E203, E251, W503, W291

@@ -1,4 +1,5 @@
 import json
+import logging
 from datetime import datetime
 from typing import Union
 
@@ -31,9 +32,11 @@ meses = [
     "Diciembre",
 ]
 
+logger = logging.getLogger(__name__)
 
 def login_view(request: HttpRequest) -> HttpResponse:
     if request.user.is_authenticated:
+        logger.info("User is already authenticated, redirecting to home page")
         return redirect("index")
 
     if request.method == "POST":
@@ -47,9 +50,11 @@ def login_view(request: HttpRequest) -> HttpResponse:
 
             if user is not None:
                 login(request, user)
+                logger.info("Login successful!")
                 return redirect("index")
             else:
-                form_login.add_error(None, "Usuario o contraseña incorrectos")
+                form_login.add_error(None, "Incorrect user or password")
+                logger.error("Incorrect user or password.")
                 return render(
                     request,
                     "login.html",
@@ -69,6 +74,7 @@ def login_view(request: HttpRequest) -> HttpResponse:
 
 def register_view(request: HttpRequest) -> HttpResponse:
     if request.user.is_authenticated:
+        logger.info("User is already authenticated, redirecting to home page")
         return redirect("index")
 
     if request.method == "POST":
@@ -87,13 +93,16 @@ def register_view(request: HttpRequest) -> HttpResponse:
                         username=username, password=password, email=email
                     )
                     login(request, usuario)
+                    logger.info("User registered successfully!")
                     return redirect("index")
                 except IntegrityError:
                     form_register.add_error(
-                        None, "El usuario ingresado ya está registrado"
+                        None, "The user is already registered"
                     )
+                    logger.error("The user is already registered.")
             else:
-                form_register.add_error(None, "Las contraseñas no coinciden")
+                form_register.add_error(None, "The passwords do not match")
+                logger.error("The passwords do not match.")
     else:
         form_register = forms.Register()
 
@@ -106,6 +115,7 @@ def register_view(request: HttpRequest) -> HttpResponse:
 
 def logout_view(request: HttpRequest) -> HttpResponse:
     logout(request)
+    logger.info("Logging out...")
     return redirect("login")
 
 
@@ -176,6 +186,9 @@ def add_libro_view(request: HttpRequest) -> HttpResponse:
                 nuevo_libro.usuario.set([request.user.id])
                 global fecha_ultimo_libro_agregado
                 fecha_ultimo_libro_agregado = datetime.now()
+                
+                logger.info("New book added")
+                
                 return JsonResponse({"status": "success", "accion": "nuevo"})
             elif request.user.id not in models.Libro.objects.get(
                 titulo=nuevo_libro.titulo,
@@ -186,12 +199,17 @@ def add_libro_view(request: HttpRequest) -> HttpResponse:
                     titulo=nuevo_libro.titulo, autores=nuevo_libro.autores
                 ).usuario.add(request.user.id)
                 fecha_ultimo_libro_agregado = datetime.now()
+                
+                logger.info("A new user added the book")
+                
                 return JsonResponse(
                     {"status": "success", "accion": "existente_nuevo_usuario"}
                 )
             else:
+                logger.debug("The book is already in your library")
                 return JsonResponse({"status": "success", "accion": "repetido"})
         except Exception as e:
+            logger.error(str(e))
             return JsonResponse({"status": "error", "message": str(e)})
 
     return render(request, "add_libro.html", {"timestamp": now().timestamp()})
@@ -207,6 +225,7 @@ def libro_view(request: HttpRequest, id: int) -> HttpResponse:
             models.Libro.objects.filter(id=id).update(estado=estado)
             return redirect("biblioteca")
         except Exception as e:
+            logger.error(str(e))
             return JsonResponse({"status": "error", "message": str(e)})
 
     return render(
@@ -238,12 +257,14 @@ def libro_del_dia_view(request: HttpRequest) -> HttpResponse:
 
                 global fecha_ultimo_libro_agregado
                 fecha_ultimo_libro_agregado = datetime.now()
+                
+                logger.info("Book of the day added to your library.")
 
                 return JsonResponse(
                     {
                         "status": "success",
                         "accion": "nuevo",
-                        "message": "Libro del día agregado a tu biblioteca",
+                        "message": "Book of the day added to your library",
                     }
                 )
             elif request.user.id not in models.Libro.objects.get(
@@ -255,23 +276,31 @@ def libro_del_dia_view(request: HttpRequest) -> HttpResponse:
                     titulo=libro_del_dia.titulo, autores=libro_del_dia.autores
                 ).usuario.add(request.user.id)
                 fecha_ultimo_libro_agregado = datetime.now()
+                
+                logger.info("Book of the day added to your library.")
+                
                 return JsonResponse(
                     {
                         "status": "success",
                         "accion": "existente_nuevo_usuario",
-                        "message": "Libro del día agregado a tu biblioteca",
+                        "message": "Book of the day added to your library",
                     }
                 )
             else:
+                logger.info("The book of the day is already in your library.")
                 return JsonResponse(
                     {
                         "status": "success",
                         "accion": "repetido",
-                        "message": "El libro del día ya está en tu biblioteca",
+                        "message": "The book of the day is already in your library",
                     }
                 )
         except Exception as e:
-            messages.error(request, "Error al agregar el libro del día a tu biblioteca")
+            # Visible to the user in the UI, not shown in console or logs
+            messages.error(request, "Error upon adding the book of the day to your library")
+            
+            # Shown in the console and logs
+            logger.error(str(e))
             return redirect("index")
 
     return render(
@@ -287,10 +316,12 @@ def delete_libro_view(request: HttpRequest, id: int) -> HttpResponse:
     try:
         libro = get_object_or_404(models.Libro, id=id)
         libro.delete()
-        messages.success(request, "Libro eliminado correctamente")
+        messages.success(request, "Book deleted successfully")
+        logger.info("Book deleted successfully.")
         return redirect("biblioteca")
     except Exception as e:
-        messages.error(request, "Error al eliminar el libro")
+        messages.error(request, "Error upon deleting the book")
+        logger.error(str(e))
         return redirect("biblioteca")
 
 
