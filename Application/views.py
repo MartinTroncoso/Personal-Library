@@ -328,3 +328,7 @@ def delete_libro_view(request: HttpRequest, id: int) -> HttpResponse:
 
 def cantidad_libros_guardados(user_id: int) -> int:
     return models.Libro.objects.filter(usuario=user_id).count()
+
+
+def test_error(request):
+    raise ValueError("Test error")

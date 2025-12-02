@@ -48,6 +48,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "Application.middleware.error-handler.GlobalExceptionMiddleware",
     "corsheaders.middleware.CorsMiddleware",  # Ticket 9
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
