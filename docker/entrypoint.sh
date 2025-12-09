@@ -23,7 +23,7 @@ echo "🛠️ Configuring periodic tasks..."
 python manage.py setup_periodic_tasks
 
 echo "📚 Selecting book of the day..."
-python manage.py shell -c "from Application.tasks import libro_del_dia; libro_del_dia.delay()"
+python manage.py shell -c "from Application.tasks import libro_del_dia; libro_del_dia()"
 
 echo "🚀 Initiating server with command: $@"
 exec "$@"

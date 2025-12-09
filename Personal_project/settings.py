@@ -1,3 +1,5 @@
+# THIS SETTINGS FILE IS NO LONGER USED. ITS CONTENT WAS MOVED TO Personal_project/settings.
+
 """
 Django settings for Personal_project project.
 
@@ -52,12 +54,6 @@ DEBUG = True
 
 ALLOWED_HOSTS: list[str] = []
 
-# In development:
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:8000",
-]
-CORS_ALLOW_CREDENTIALS = True
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -68,12 +64,13 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "Application.apps.ApplicationConfig",
+    "django_celery_beat",
     "corsheaders",  # Ticket 9
 ]
 
 MIDDLEWARE = [
-    "Application.middleware.error-handler.GlobalExceptionMiddleware",
     "corsheaders.middleware.CorsMiddleware",  # Ticket 9
+    "Application.middleware.error-handler.GlobalExceptionMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -209,12 +206,14 @@ AUTH_USER_MODEL = "Application.Usuario"
 CELERY_BROKER_URL = os.getenv("REDIS_URL", "redis://localhost:6379/0")
 CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 
-INSTALLED_APPS += [
-    "django_celery_beat",
+# In development:
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8000/",
 ]
+CORS_ALLOW_CREDENTIALS = True
 
 CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:8000",
+    "http://localhost:8000/",
 ]
 
 # Set to True when moving to production environment

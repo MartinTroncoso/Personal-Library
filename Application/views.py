@@ -35,6 +35,7 @@ meses = [
 
 logger = logging.getLogger(__name__)
 
+
 def login_view(request: HttpRequest) -> HttpResponse:
     if request.user.is_authenticated:
         logger.info("User is already authenticated, redirecting to home page")
@@ -124,6 +125,7 @@ def logout_view(request: HttpRequest) -> HttpResponse:
 @login_required
 def index(request: HttpRequest) -> HttpResponse:
     libro_del_dia = models.LibroDelDia.objects.last()
+    datos_fecha: dict = {}
 
     if fecha_ultimo_libro_agregado:
         datos_fecha = {
@@ -132,8 +134,6 @@ def index(request: HttpRequest) -> HttpResponse:
             "day": fecha_ultimo_libro_agregado.day,
             "hour": fecha_ultimo_libro_agregado.strftime("%H:%M:%S"),
         }
-    else:
-        datos_fecha: dict = {}
 
     return render(
         request,
@@ -331,9 +331,9 @@ def cantidad_libros_guardados(user_id: int) -> int:
     return models.Libro.objects.filter(usuario=user_id).count()
 
 
-def csrf(request):
-    return JsonResponse({"csrfToken": get_token(request)})
+def csrf(request: HttpRequest) -> HttpResponse:
+    return JsonResponse({"csrftoken": get_token(request)})
 
 
-def test_error(request):
+def test_error(request: HttpRequest) -> BaseException:
     raise ValueError("Test error")

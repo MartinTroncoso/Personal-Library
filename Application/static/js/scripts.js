@@ -3,10 +3,10 @@ const librosTemp = [];
 
 async function buscarLibros(cantidad) {
     try {
-        // Convertir a número por si viene como string desde el input
+        // Convert to number just in case it comes as a string from the input
         cantidad = parseInt(cantidad);
 
-        // Validación de entrada
+        // Entry validation
         if (isNaN(cantidad) || cantidad <= 0) {
             cantidad = 10; // Valor por defecto
         }
@@ -16,7 +16,7 @@ async function buscarLibros(cantidad) {
             return;
         }
 
-        // Obtener el texto de búsqueda
+        // Obtain the search text
         const query = document.getElementById('searchInput').value.trim();
 
         if (query === "") {
@@ -100,12 +100,15 @@ function agregarLibro(libro) {
         link_lectura: accessInfo?.webReaderLink || null,
     };
 
+    const csrfToken = getCSRFToken();
+    console.log("Extracted CSRF Token:", csrfToken);
     fetch('/add_libro', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-CSRFToken': getCSRFToken(),
+            'X-CSRFToken': csrfToken,
         },
+        credentials: 'include',
         body: JSON.stringify(datos)
     })
     .then(response => response.json())
@@ -148,10 +151,10 @@ function getCSRFToken() {
     const name = 'csrftoken';
     const cookies = document.cookie.split(';');
     for (let i = 0; i < cookies.length; i++) {
-    let c = cookies[i].trim();
-    if (c.startsWith(name + '=')) {
-        return c.substring(name.length + 1);
-    }
+        let c = cookies[i].trim();
+        if (c.startsWith(name + '=')) {
+            return c.substring(name.length + 1);
+        }
     }
     return '';
 }

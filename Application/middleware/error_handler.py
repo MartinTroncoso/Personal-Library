@@ -1,3 +1,5 @@
+# mypy: ignore-errors
+
 import logging
 from django.http import JsonResponse
 from django.shortcuts import render

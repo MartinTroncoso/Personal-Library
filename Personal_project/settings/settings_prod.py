@@ -4,8 +4,12 @@ import os
 from .base import *
 
 DEBUG = False
-
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",")
+
+CORS_ALLOWED_ORIGINS = [
+    "https://mi-frontend.com",
+    "https://app.otro-dominio.com",
+]
 
 CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS", "").split(",")
 

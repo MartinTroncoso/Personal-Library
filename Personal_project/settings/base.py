@@ -11,11 +11,36 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 import os
+import environ
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+env = environ.Env()
+env_file = BASE_DIR / ".env"
+if env_file.exists():
+    environ.Env.read_env(str(env_file))
+
+# DATABASE CONFIG
+# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
+DATABASE_URL = env("DATABASE_URL", default=None)
+
+if DATABASE_URL:
+    # Priority 1: DATABASE_URL
+    DATABASES = {"default": env.db()}
+else:
+    # Priority 2: variables separated
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": env("DB_NAME", default="postgres"),
+            "USER": env("DB_USER", default="postgres"),
+            "PASSWORD": env("DB_PASSWORD", default="postgres"),
+            "HOST": env("DB_HOST", default="localhost"),
+            "PORT": env("DB_PORT", default="5432"),
+        }
+    }
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -33,9 +58,13 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "Application.apps.ApplicationConfig",
+    "django_celery_beat",
+    "corsheaders",  # Ticket 9
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",  # Ticket 9
+    "Application.middleware.error_handler.GlobalExceptionMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -63,21 +92,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "Personal_project.wsgi.application"
-
-
-# Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.getenv("DB_NAME", "postgres"),
-        "USER": os.getenv("DB_USER", "postgres"),
-        "PASSWORD": os.getenv("DB_PASSWORD", "postgres"),
-        "HOST": os.getenv("DB_HOST", "localhost"),
-        "PORT": "5432",
-    }
-}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -148,9 +162,11 @@ LOGGING = {
             "formatter": "default",
         },
         "file": {
-            "class": "logging.FileHandler",
+            "class": "logging.handlers.RotatingFileHandler",
             "filename": "logs/app.log",
             "formatter": "default",
+            "maxBytes": 2 * 1024 * 1024,  # 2 MB
+            "backupCount": 5,  # it keeps 5 old files
         },
     },
     "loggers": {
@@ -169,12 +185,12 @@ AUTH_USER_MODEL = "Application.Usuario"
 CELERY_BROKER_URL = os.getenv("REDIS_URL", "redis://localhost:6379/0")
 CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 
-INSTALLED_APPS += [
-    "django_celery_beat",
-]
+# In development:
+CORS_ALLOWED_ORIGINS = os.getenv("CORS_ALLOWED_ORIGINS", "").split(",")
+CORS_ALLOW_CREDENTIALS = True
 
 # Set to True when moving to production environment
 CSRF_COOKIE_SAMESITE = "Lax"
 CSRF_COOKIE_NAME = "csrftoken"
-CSRF_HEADER_NAME = "X-CSRFToken"
+# CSRF_HEADER_NAME = "X-CSRFToken"
 SESSION_COOKIE_SAMESITE = "Lax"

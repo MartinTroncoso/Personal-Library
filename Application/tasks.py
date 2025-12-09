@@ -1,3 +1,5 @@
+# mypy: ignore-errors
+
 import random
 
 import requests
@@ -7,70 +9,66 @@ from django.utils.timezone import now
 from .models import LibroDelDia
 
 
+API_URL = "https://www.googleapis.com/books/v1/volumes"
+LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+
 @shared_task
 def libro_del_dia() -> str:
-    letras = "abcdefghijklmnopqrstuvwxyz"
-    letra_aleatoria = random.choice(letras)
+    MAX_TRIES = 5
+    valid_books = []
 
-    url = "https://www.googleapis.com/books/v1/volumes"
-    params = {
-        "q": letra_aleatoria,
-        "maxResults": 40,
-        "startIndex": random.randint(0, 100),
-    }
+    for _ in range(MAX_TRIES):
+        letra = random.choice(LETTERS)
+        params = {
+            "q": letra,
+            "maxResults": 40,
+            "startIndex": random.randint(0, 100),
+        }
 
-    response = requests.get(url, params=params)
-    data = response.json()
+        response = requests.get(
+            API_URL, params=params, timeout=5
+        )  # request.get will throw an exception only due to network issues
 
-    if "items" not in data:
-        return "❌ No books were found"
+        try:
+            response.raise_for_status()
+            data = response.json()
+        except requests.exceptions.RequestException as e:
+            return f"❌ Error requesting API: {e}"
 
-    libros_validos = [
-        item
-        for item in data["items"]
-        if item.get("accessInfo", {}).get("viewability") != "NO_PAGES"
-        and item.get("volumeInfo", {}).get("description") is not None
-        and item.get("volumeInfo", {}).get("subtitle") is not None
-    ]
+        items = data.get("items", [])
+        if not items:
+            continue
 
-    while not libros_validos:
-        letra_aleatoria = random.choice(letras.replace(letra_aleatoria, "", 1))
-        params["q"] = letra_aleatoria
-        response = requests.get(url, params=params)
-        data = response.json()
-        if "items" not in data:
-            return "❌ No books were found"
-
-        libros_validos = [
+        valid_books = [
             item
-            for item in data["items"]
+            for item in items
             if item.get("accessInfo", {}).get("viewability") != "NO_PAGES"
-            and item.get("volumeInfo", {}).get("description") is not None
-            and item.get("volumeInfo", {}).get("subtitle") is not None
+            and item.get("volumeInfo", {}).get("description")
         ]
 
-    if not libros_validos:
-        return "❌ No books with visible pages were found"
+        if valid_books:
+            break
 
-    LibroDelDia.objects.all().delete()  # Clean up the table before saving a book
+    if not valid_books:
+        return "❌ No valid books found after multiple attempts"
 
-    libro = random.choice(libros_validos)
+    # Delete previous and save new book
+    LibroDelDia.objects.all().delete()
 
-    volumeInfo = libro.get("volumeInfo", {})
-    accessInfo = libro.get("accessInfo", {})
+    libro = random.choice(valid_books)
+    volume = libro.get("volumeInfo", {})
+    access = libro.get("accessInfo", {})
 
-    # Save it in the database
     LibroDelDia.objects.create(
-        titulo=volumeInfo.get("title"),
-        subtitulo=volumeInfo.get("subtitle"),
-        descripcion=volumeInfo.get("description"),
-        autores=", ".join(volumeInfo.get("authors", [])),
+        titulo=volume.get("title"),
+        subtitulo=volume.get("subtitle"),
+        descripcion=volume.get("description"),
+        autores=", ".join(volume.get("authors", [])),
         fecha=now(),
-        portada=volumeInfo.get("imageLinks", {}).get("thumbnail"),
-        visibilidad=accessInfo.get("viewability", "UNKNOWN"),
-        link_lectura=volumeInfo.get("infoLink"),
+        portada=volume.get("imageLinks", {}).get("thumbnail"),
+        visibilidad=access.get("viewability", "UNKNOWN"),
+        link_lectura=volume.get("infoLink"),
     )
 
-    return f"""✅ Book saved: {volumeInfo.get('title')}, 
-            description: {volumeInfo.get('description')}, 
-            subtitle: {volumeInfo.get('subtitle')}"""
+    return f"✅ Book saved: {volume.get('title')}"
