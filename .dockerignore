@@ -5,4 +5,7 @@ __pycache__/
 .env
 *.db
 venv/
+logs/
 .git/
+.gitignore
+node_modules/

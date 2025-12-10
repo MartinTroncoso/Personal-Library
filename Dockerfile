@@ -1,12 +1,25 @@
 FROM python:3.11-slim
 
-RUN apt-get update && apt-get install -y netcat-openbsd postgresql-client && rm -rf /var/lib/apt/lists/*
+# Avoids .pyc files and yields direct logs
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
+# System dependencies
+RUN apt-get update && apt-get install -y \
+    netcat-openbsd \
+    postgresql-client \
+    build-essential \
+    libpq-dev \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
 COPY requirements/ ./requirements/
 
-RUN pip install --no-cache-dir -r requirements/dev.txt
+# Install dependencies
+RUN pip install --upgrade pip \
+    && pip install --no-cache-dir -r requirements/dev.txt
 
 COPY . .
 

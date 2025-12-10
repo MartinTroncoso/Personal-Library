@@ -85,3 +85,18 @@
 [2025-12-09 19:40:09,556] INFO Application.views: Book deleted successfully.
 [2025-12-09 19:40:13,114] INFO Application.views: Book deleted successfully.
 [2025-12-09 19:40:16,056] INFO Application.views: Book deleted successfully.
+[2025-12-10 16:10:24,402] INFO Application.views: Login successful!
+[2025-12-10 16:10:32,044] INFO Application.views: Book of the day added to your library.
+[2025-12-10 16:11:36,490] INFO Application.views: Book deleted successfully.
+[2025-12-10 16:11:38,074] INFO Application.views: Book deleted successfully.
+[2025-12-10 16:11:39,611] INFO Application.views: Book deleted successfully.
+[2025-12-10 16:11:41,250] INFO Application.views: Book deleted successfully.
+[2025-12-10 16:11:42,013] INFO Application.views: Book deleted successfully.
+[2025-12-10 16:11:42,596] INFO Application.views: Book deleted successfully.
+[2025-12-10 16:11:44,438] INFO Application.views: Book deleted successfully.
+[2025-12-10 16:11:46,179] INFO Application.views: Book deleted successfully.
+[2025-12-10 16:11:47,789] INFO Application.views: Book deleted successfully.
+[2025-12-10 16:11:48,964] INFO Application.views: Book deleted successfully.
+[2025-12-10 16:11:49,677] INFO Application.views: Book deleted successfully.
+[2025-12-10 16:11:56,407] INFO Application.views: New book added
+[2025-12-10 16:11:58,216] DEBUG Application.views: The book is already in your library
