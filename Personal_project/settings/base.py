@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     "Application.apps.ApplicationConfig",
     "django_celery_beat",
     "corsheaders",  # Ticket 9
+    "health",  # Ticket 14
 ]
 
 MIDDLEWARE = [
