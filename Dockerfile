@@ -25,6 +25,8 @@ COPY . .
 
 EXPOSE 8000
 
+HEALTHCHECK CMD curl --fail http://localhost:8000/health/ || exit 1
+
 # Copiar el script de entrada
 COPY docker/entrypoint.sh /entrypoint.sh
 COPY docker/entrypoint-celery.sh /entrypoint-celery.sh

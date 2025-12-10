@@ -100,3 +100,6 @@
 [2025-12-10 16:11:49,677] INFO Application.views: Book deleted successfully.
 [2025-12-10 16:11:56,407] INFO Application.views: New book added
 [2025-12-10 16:11:58,216] DEBUG Application.views: The book is already in your library
+[2025-12-10 17:52:47,274] INFO Application.views: Login successful!
+[2025-12-10 17:52:49,673] INFO Application.views: Book of the day added to your library.
+[2025-12-10 17:52:54,887] INFO Application.views: The book of the day is already in your library.
