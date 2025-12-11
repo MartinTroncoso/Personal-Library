@@ -1,11 +1,12 @@
 import json
 
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.http import HttpRequest, JsonResponse
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_exempt, csrf_protect
+from django.views.decorators.http import require_POST
 
 
-@csrf_exempt
+@csrf_exempt  # We use it here because login with JSON does not modify sensible data
 def login_view(request: HttpRequest) -> JsonResponse:
     if request.method != "POST":
         return JsonResponse({"error": "Method not allowed"}, status=405)
@@ -32,3 +33,18 @@ def login_view(request: HttpRequest) -> JsonResponse:
     login(request, user)
 
     return JsonResponse({"message": "Login successful"})
+
+
+@require_POST
+@csrf_protect
+def logout_json(request: HttpRequest) -> JsonResponse:
+    if request.method != "POST":
+        return JsonResponse({"error": "Only POST allowed"}, status=405)
+
+    if not request.user.is_authenticated:
+        # It allows idempotent logout: logging out 2 times does not give any error
+        return JsonResponse({"status": "already_logged_out"})
+
+    logout(request)
+
+    return JsonResponse({"status": "logged_out"})
