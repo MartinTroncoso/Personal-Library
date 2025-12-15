@@ -4,3 +4,4 @@ __pycache__/
 Notas.txt
 *.pyc
 .env
+cookies.txt
