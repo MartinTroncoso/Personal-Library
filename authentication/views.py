@@ -2,6 +2,7 @@ import json
 
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpRequest, JsonResponse
+from django.middleware.csrf import get_token
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from django.views.decorators.http import require_POST
 
@@ -48,3 +49,14 @@ def logout_json(request: HttpRequest) -> JsonResponse:
     logout(request)
 
     return JsonResponse({"status": "logged_out"})
+
+
+def test_url(request: HttpRequest) -> JsonResponse:
+    if request.user.is_authenticated:
+        return JsonResponse({"test": "swccess"})
+    else:
+        return JsonResponse({"test": "failure"})
+
+
+def csrf_token(request: HttpRequest) -> JsonResponse:
+    return JsonResponse({"csrftoken": get_token(request)})
