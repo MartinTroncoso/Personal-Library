@@ -1,8 +1,6 @@
-import json
-
 from django_celery_beat.models import CrontabSchedule, PeriodicTask
 
-from Application.tasks import libro_del_dia
+# from Application.tasks import libro_del_dia
 
 schedule, _ = CrontabSchedule.objects.get_or_create(
     minute="*/5",
