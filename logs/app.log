@@ -103,3 +103,11 @@
 [2025-12-10 17:52:47,274] INFO Application.views: Login successful!
 [2025-12-10 17:52:49,673] INFO Application.views: Book of the day added to your library.
 [2025-12-10 17:52:54,887] INFO Application.views: The book of the day is already in your library.
+[2025-12-16 18:56:16,384] ERROR Application.views: Incorrect user or password.
+[2025-12-16 18:56:26,786] INFO Application.views: User registered successfully!
+[2025-12-16 18:57:00,307] INFO Application.views: Book of the day added to your library.
+[2025-12-16 18:57:02,103] INFO Application.views: The book of the day is already in your library.
+[2025-12-16 18:57:20,551] INFO Application.views: New book added
+[2025-12-16 18:57:22,723] DEBUG Application.views: The book is already in your library
+[2025-12-16 18:57:24,651] INFO Application.views: New book added
+[2025-12-16 18:57:26,167] DEBUG Application.views: The book is already in your library

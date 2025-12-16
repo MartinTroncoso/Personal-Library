@@ -5,3 +5,4 @@ Notas.txt
 *.pyc
 .env
 cookies.txt
+db.sqlite3

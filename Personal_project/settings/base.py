@@ -33,14 +33,26 @@ else:
     # Priority 2: variables separated
     DATABASES = {
         "default": {
-            "ENGINE": "django.db.backends.postgresql",
-            "NAME": env("DB_NAME", default="postgres"),
-            "USER": env("DB_USER", default="postgres"),
-            "PASSWORD": env("DB_PASSWORD", default="postgres"),
-            "HOST": env("DB_HOST", default="localhost"),
-            "PORT": env("DB_PORT", default="5432"),
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
         }
     }
+
+# if DATABASE_URL:
+#     # Priority 1: DATABASE_URL
+#     DATABASES = {"default": env.db()}
+# else:
+#     # Priority 2: variables separated
+#     DATABASES = {
+#         "default": {
+#             "ENGINE": "django.db.backends.postgresql",
+#             "NAME": env("DB_NAME", default="postgres"),
+#             "USER": env("DB_USER", default="postgres"),
+#             "PASSWORD": env("DB_PASSWORD", default="postgres"),
+#             "HOST": env("DB_HOST", default="localhost"),
+#             "PORT": env("DB_PORT", default="5432"),
+#         }
+#     }
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
