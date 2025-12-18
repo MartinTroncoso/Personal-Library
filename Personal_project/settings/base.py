@@ -175,24 +175,19 @@ LOGGING = {
             "class": "logging.StreamHandler",
             "formatter": "default",
         },
-        "file": {
-            "class": "logging.handlers.RotatingFileHandler",
-            "filename": "logs/app.log",
-            "formatter": "default",
-            "maxBytes": 2 * 1024 * 1024,  # 2 MB
-            "backupCount": 5,  # it keeps 5 old files
-        },
     },
     "loggers": {
-        "django": {"handlers": ["console"], "level": "WARNING"},
+        "django": {
+            "handlers": ["console"],
+            "level": "WARNING",
+        },
         "Application": {
-            "handlers": ["console", "file"],
+            "handlers": ["console"],
             "level": "DEBUG",
             "propagate": False,
         },
     },
 }
-
 
 AUTH_USER_MODEL = "Application.Usuario"
 
