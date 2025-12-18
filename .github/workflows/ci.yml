@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      DJANGO_SETTINGS_MODULE: settings.settings_dev
+      DJANGO_SETTINGS_MODULE: Personal_project.settings.settings_dev
       SECRET_KEY: dummy-secret-key
 
     steps:
