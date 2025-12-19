@@ -78,8 +78,9 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",  # Ticket 9
-    "Application.middleware.error_handler.GlobalExceptionMiddleware",
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
+    "Application.middleware.error_handler.GlobalExceptionMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -141,8 +142,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = "static/"
-STATIC_FILES_DIRS = [os.path.join(BASE_DIR, "Application/static")]
+STATIC_URL = "/static/"
+STATICFILES_DIRS = [
+    BASE_DIR / "Application" / "static",
+]  # Where the files are stored
+STATIC_ROOT = BASE_DIR / "staticfiles"  # Where Django gathers the files for production
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
