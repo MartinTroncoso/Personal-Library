@@ -6,3 +6,5 @@ Notas.txt
 .env
 cookies.txt
 db.sqlite3
+htmlcov/
+.coverage

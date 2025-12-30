@@ -4,5 +4,6 @@ flake8
 mypy
 pytest
 pytest-django
+pytest-cov
 factory-boy
 ipython
