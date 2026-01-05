@@ -3,12 +3,17 @@ import json
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpRequest, JsonResponse
 from django.middleware.csrf import get_token
-from django.views.decorators.csrf import csrf_exempt, csrf_protect
-from django.views.decorators.http import require_POST
+from django.views.decorators.csrf import ensure_csrf_cookie
+from django.views.decorators.http import require_http_methods
 
 
-@csrf_exempt  # We use it here because login with JSON does not modify sensible data
+# @csrf_exempt  # We use it here because login with JSON does not modify sensible data
+@ensure_csrf_cookie
+@require_http_methods(["GET", "POST"])
 def login_view(request: HttpRequest) -> JsonResponse:
+    if request.method == "GET":
+        return JsonResponse({"detail": "CSRF cookie set"})
+
     if request.method != "POST":
         return JsonResponse({"error": "Method not allowed"}, status=405)
 
@@ -33,11 +38,9 @@ def login_view(request: HttpRequest) -> JsonResponse:
 
     login(request, user)
 
-    return JsonResponse({"message": "Login successful"})
+    return JsonResponse({"success": True, "message": "Login successful"})
 
 
-@require_POST
-@csrf_protect
 def logout_json(request: HttpRequest) -> JsonResponse:
     if request.method != "POST":
         return JsonResponse({"error": "Only POST allowed"}, status=405)
@@ -48,7 +51,7 @@ def logout_json(request: HttpRequest) -> JsonResponse:
 
     logout(request)
 
-    return JsonResponse({"status": "logged_out"})
+    return JsonResponse({"success": True, "status": "logged_out"})
 
 
 def test_url(request: HttpRequest) -> JsonResponse:
