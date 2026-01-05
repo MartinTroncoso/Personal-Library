@@ -7,3 +7,4 @@ pytest-django
 pytest-cov
 factory-boy
 ipython
+factory-boy
