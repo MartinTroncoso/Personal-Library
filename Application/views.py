@@ -2,7 +2,10 @@ import json
 import logging
 from datetime import datetime
 from typing import Union
-
+from .helpers import (
+    book_has_been_saved_by_someone,
+    book_has_not_been_saved_by_current_user,
+)
 from dateutil import parser  # type: ignore
 from django.contrib import messages
 from django.contrib.auth import authenticate, get_user_model, login, logout
@@ -176,11 +179,7 @@ def add_libro_view(request: HttpRequest) -> HttpResponse:
                 link_lectura=datos["link_lectura"],
             )
 
-            if not models.Libro.objects.filter(
-                titulo=nuevo_libro.titulo,
-                subtitulo=nuevo_libro.subtitulo,
-                autores=nuevo_libro.autores,
-            ).exists():
+            if not book_has_been_saved_by_someone(nuevo_libro):
                 nuevo_libro.save()
                 nuevo_libro.usuario.set([request.user.id])
                 global fecha_ultimo_libro_agregado
@@ -189,11 +188,7 @@ def add_libro_view(request: HttpRequest) -> HttpResponse:
                 logger.info("New book added")
 
                 return JsonResponse({"status": "success", "accion": "nuevo"})
-            elif request.user.id not in models.Libro.objects.get(
-                titulo=nuevo_libro.titulo,
-                subtitulo=nuevo_libro.subtitulo,
-                autores=nuevo_libro.autores,
-            ).usuario.values_list("id", flat=True):
+            elif book_has_not_been_saved_by_current_user(request.user.id, nuevo_libro):
                 models.Libro.objects.get(
                     titulo=nuevo_libro.titulo, autores=nuevo_libro.autores
                 ).usuario.add(request.user.id)
@@ -239,11 +234,7 @@ def libro_del_dia_view(request: HttpRequest) -> HttpResponse:
 
     if request.method == "POST":
         try:
-            if not models.Libro.objects.filter(
-                titulo=libro_del_dia.titulo,
-                subtitulo=libro_del_dia.subtitulo,
-                autores=libro_del_dia.autores,
-            ).exists():
+            if not book_has_been_saved_by_someone(libro_del_dia):
                 models.Libro.objects.create(
                     titulo=libro_del_dia.titulo,
                     subtitulo=libro_del_dia.subtitulo,
@@ -267,11 +258,9 @@ def libro_del_dia_view(request: HttpRequest) -> HttpResponse:
                         "message": "Book of the day added to your library",
                     }
                 )
-            elif request.user.id not in models.Libro.objects.get(
-                titulo=libro_del_dia.titulo,
-                subtitulo=libro_del_dia.subtitulo,
-                autores=libro_del_dia.autores,
-            ).usuario.values_list("id", flat=True):
+            elif book_has_not_been_saved_by_current_user(
+                request.user.id, libro_del_dia
+            ):
                 models.Libro.objects.get(
                     titulo=libro_del_dia.titulo, autores=libro_del_dia.autores
                 ).usuario.add(request.user.id)
