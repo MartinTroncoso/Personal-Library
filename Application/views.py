@@ -154,7 +154,9 @@ def index(request: HttpRequest) -> HttpResponse:
 
 @login_required
 def biblioteca_view(request: HttpRequest) -> HttpResponse:
-    libros = models.Libro.objects.filter(usuario=request.user.id)
+    libros = models.Libro.objects.prefetch_related("usuario").filter(
+        usuario=request.user
+    )
     return render(
         request, "biblioteca.html", {"libros": libros, "timestamp": now().timestamp()}
     )
@@ -317,7 +319,9 @@ def delete_libro_view(request: HttpRequest, id: int) -> HttpResponse:
 
 
 def cantidad_libros_guardados(user_id: int) -> int:
-    return models.Libro.objects.filter(usuario=user_id).count()
+    return (
+        models.Libro.objects.prefetch_related("usuario").filter(usuario=user_id).count()
+    )
 
 
 def csrf(request: HttpRequest) -> HttpResponse:
