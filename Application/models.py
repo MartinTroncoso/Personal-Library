@@ -28,7 +28,7 @@ class Libro(models.Model):
         max_length=20, choices=ESTADO_CHOICES, default="NO_LEIDO"
     )
     titulo: Any = models.CharField(max_length=200)
-    subtitulo: Any = models.CharField(max_length=150, null=True, blank=True)
+    subtitulo: Any = models.CharField(max_length=200, null=True, blank=True)
     descripcion: Any = models.TextField()
     autores: Any = models.CharField(max_length=500)
     fecha: Any = models.DateField(null=True, blank=True)
@@ -47,7 +47,7 @@ class Libro(models.Model):
 
 class LibroDelDia(models.Model):
     titulo: Any = models.CharField(max_length=200)
-    subtitulo: Any = models.CharField(max_length=150, null=True, blank=True)
+    subtitulo: Any = models.CharField(max_length=200, null=True, blank=True)
     descripcion: Any = models.TextField(null=True, blank=True)
     autores: Any = models.CharField(max_length=500, null=True, blank=True)
     fecha: Any = models.DateField(null=True, blank=True)
