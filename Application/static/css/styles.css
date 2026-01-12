@@ -102,6 +102,18 @@ footer{
   flex-grow: 1; /* Esto permite que el main ocupe todo el espacio disponible entre header y footer */
 }
 
+.logo {
+  display: flex;
+  align-items: center;   /* centra verticalmente */
+  gap: 8px;              /* espacio entre imagen y texto */
+}
+
+.logo img {
+  height: 2em;           /* MISMO alto que el texto */
+  width: auto;
+}
+
+
 /*
 div p {
     font-size: 1.2em;

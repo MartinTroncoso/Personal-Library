@@ -14,7 +14,10 @@
     <header>
         <nav class="navbar fixed-top shadow-sm bg-white d-flex align-items-center">
             <div class="container">
-                <h1 class="h3 fw-bold text-primary m-0">Personal Library App</h1>
+                <div class="logo">
+                    <a href="{% url 'index' %}"><img src="{% static 'images/icon.png' %}"></a>
+                    <h1 class="h3 fw-bold text-primary m-0">Personal Library App</h1>
+                </div>
                 <div>
                     <a href="{% url 'index' %}" class="text-dark me-3">Inicio</a>
                     <a href="{% url 'biblioteca' %}" class="text-dark me-3">Mi biblioteca</a>
