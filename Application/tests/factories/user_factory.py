@@ -1,12 +1,10 @@
 import factory
-from django.contrib.auth import get_user_model
-
-User = get_user_model()
+from Application.models import Usuario
 
 
 class UserFactory(factory.django.DjangoModelFactory):
     class Meta:
-        model = User
+        model = Usuario
 
     username = factory.Sequence(
         lambda n: f"user{n}"
