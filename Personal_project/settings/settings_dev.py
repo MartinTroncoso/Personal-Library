@@ -14,8 +14,8 @@ CSRF_TRUSTED_ORIGINS = [
     "http://localhost:8000",
 ]
 
-CSRF_COOKIE_SECURE = False  # in local
-SESSION_COOKIE_SECURE = False  # in local
+CSRF_COOKIE_SECURE = False
+SESSION_COOKIE_SECURE = False
 
 STORAGES = {
     "default": {
