@@ -146,8 +146,9 @@ STATIC_URL = "/static/"
 STATICFILES_DIRS = [
     BASE_DIR / "Application" / "static",
 ]  # Where the files are stored
-STATIC_ROOT = BASE_DIR / "staticfiles"  # Where Django gathers the files for production
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+STATIC_ROOT = None
+# STATIC_ROOT = BASE_DIR / "staticfiles"  # Where Django gathers the files for production
+# STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
