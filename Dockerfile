@@ -19,7 +19,7 @@ COPY requirements/ ./requirements/
 
 # Install dependencies
 RUN pip install --upgrade pip \
-    && pip install --no-cache-dir -r requirements/prod.txt
+    && pip install --no-cache-dir -r requirements/dev.txt
 
 COPY . .
 
