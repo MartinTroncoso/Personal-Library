@@ -33,3 +33,20 @@ def test_login_success_creates_session() -> None:
 
     # Verify session
     assert "_auth_user_id" in client.session
+
+
+def test_login_requires_csrf() -> None:
+    client = Client(enforce_csrf_checks=True)
+
+    response = client.post(
+        "/auth/login/",
+        data=json.dumps(
+            {
+                "username": "x",
+                "password": "y",
+            }
+        ),
+        content_type="application/json",
+    )
+    assert response.status_code == 403
+    assert "csrftoken" not in client.cookies
