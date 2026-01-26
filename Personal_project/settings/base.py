@@ -15,7 +15,7 @@ import environ
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 env = environ.Env()
 env_file = BASE_DIR / ".env"
@@ -129,10 +129,8 @@ USE_TZ = True
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [
     BASE_DIR / "Application" / "static",
-]  # Where the files are stored
+]
 STATIC_ROOT = None
-# STATIC_ROOT = BASE_DIR / "staticfiles"  # Where Django gathers the files for production
-# STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -146,9 +144,7 @@ LOGIN_URL = "/login"
 LOGIN_REDIRECT_URL = "/"
 
 SESSION_COOKIE_AGE = 3660
-SESSION_SAVE_EVERY_REQUEST = (
-    True  # Actualiza la sesión cada vez que se hace una solicitud
-)
+SESSION_SAVE_EVERY_REQUEST = True  # Session is refreshed every time the request is done
 
 
 LOGGING = {

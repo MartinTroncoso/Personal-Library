@@ -4,6 +4,7 @@ __pycache__/
 Notas.txt
 *.pyc
 .env
+.env.docker
 cookies.txt
 db.sqlite3
 htmlcov/

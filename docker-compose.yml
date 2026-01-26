@@ -6,7 +6,7 @@ services:
     ports:
       - "8000:8000"
     env_file:
-      - .env
+      - .env.docker
     depends_on:
       - db
       - redis
@@ -42,7 +42,7 @@ services:
       - db
       - redis
     env_file:
-      - .env
+      - .env.docker
     environment:
       - DB_NAME=postgres
       - DB_USER=postgres
@@ -60,7 +60,7 @@ services:
       - db
       - redis
     env_file:
-      - .env    
+      - .env.docker
     environment:
       - DB_NAME=postgres
       - DB_USER=postgres
